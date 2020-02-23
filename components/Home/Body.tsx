@@ -2,7 +2,6 @@ import React from 'react'
 import Link from 'next/link'
 import cn from 'classnames'
 
-import classes from './Body.module.css'
 import { Trio } from '../../src/getTrio'
 import ArrowBack from './arrow_back.svg'
 import ArrowForward from './arrow_forward.svg'
@@ -30,7 +29,9 @@ export const Body = ({ current, previous, next }: Props) => (
       </Link>
     </div>
     <div className="flex-grow flex flex-col items-center">
-      <div className={`${classes.character} mb-4`}>{current.character}</div>
+      <div className="mb-4" style={{ fontSize: '10rem' }}>
+        {current.character}
+      </div>
       <div className="text-xl">“{current.name}”</div>
     </div>
     <div
