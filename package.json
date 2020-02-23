@@ -1,6 +1,6 @@
 {
   "name": "emoji-of-the-x",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,15 +10,20 @@
   "dependencies": {
     "@now/node": "^1.4.1",
     "autoprefixer": "^9.7.4",
+    "classnames": "^2.2.6",
     "isomorphic-unfetch": "^3.0.0",
     "next": "9.2.2",
     "postcss-import": "^12.0.1",
+    "qs": "^6.9.1",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "tailwindcss": "^1.2.0"
   },
   "devDependencies": {
+    "@svgr/webpack": "^5.1.0",
+    "@types/classnames": "^2.2.9",
     "@types/node": "^13.7.4",
+    "@types/qs": "^6.9.1",
     "@types/react": "^16.9.22",
     "husky": "^4.2.3",
     "now": "^17.0.4",

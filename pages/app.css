@@ -18,5 +18,5 @@ body > div {
 
 body {
   font-family: 'Alef', sans-serif;
-  background-color: theme('colors.green-100');
+  background-color: theme('colors.green.100');
 }
