@@ -2,23 +2,24 @@ import React from 'react'
 import Link from 'next/link'
 import cn from 'classnames'
 
-import { Trio } from '../../src/getTrio'
 import ArrowBack from './arrow_back.svg'
 import ArrowForward from './arrow_forward.svg'
-
-type Props = Trio
 
 const getDaySlug = (date: Date) =>
   `/day/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 
-export const Body = ({ current, previous, next }: Props) => (
+export const Body = ({ current, previous, next }) => (
   <main className="w-full flex items-center">
     <div
       className={cn('m2', {
         'opacity-0': !previous,
       })}
     >
-      <Link href={previous ? getDaySlug(new Date(previous.created_at)) : '/'}>
+      <Link
+        href={
+          previous ? getDaySlug(new Date(parseInt(previous.created_at))) : '/'
+        }
+      >
         <a
           className={cn('m2', {
             'cursor-default': !previous,
@@ -29,10 +30,14 @@ export const Body = ({ current, previous, next }: Props) => (
       </Link>
     </div>
     <div className="flex-grow flex flex-col items-center">
-      <div className="mb-4" style={{ fontSize: '10rem' }}>
-        {current.character}
-      </div>
-      <div className="text-xl">“{current.name}”</div>
+      {current && (
+        <>
+          <div className="mb-4" style={{ fontSize: '10rem' }}>
+            {current.character}
+          </div>
+          <div className="text-xl">“{current.name}”</div>
+        </>
+      )}
     </div>
     <div
       className={cn('m2', {
@@ -40,7 +45,7 @@ export const Body = ({ current, previous, next }: Props) => (
         'cursor-default': !next,
       })}
     >
-      <Link href={next ? getDaySlug(new Date(next.created_at)) : '/'}>
+      <Link href={next ? getDaySlug(new Date(parseInt(next.created_at))) : '/'}>
         <a
           className={cn('m2', {
             'cursor-default': !next,
