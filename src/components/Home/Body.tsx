@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
 import { theme } from '../theme'
+import { Emoji } from '../../types'
 
 const getDaySlug = (date: Date) =>
   `/day/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
@@ -36,7 +37,13 @@ const HeroName = styled.div`
   font-size: 1.25rem;
 `
 
-export const Body = ({ current, previous, next }: any) => (
+type Props = {
+  current?: Emoji | null
+  previous?: Emoji | null
+  next?: Emoji | null
+}
+
+export const Body = ({ current, previous, next }: Props) => (
   <Container>
     <ArrowContainer>
       {previous && (

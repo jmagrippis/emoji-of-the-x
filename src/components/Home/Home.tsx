@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 import { Body } from './Body'
+import { TrioQuery, TrioQueryVariables } from '../../generated/graphql'
 
 const TRIO_QUERY = gql`
   query Trio($anchor: String) {
@@ -33,7 +34,7 @@ const TRIO_QUERY = gql`
 
 const Home = () => {
   const { year, month, day } = useParams()
-  const { error, data } = useQuery(TRIO_QUERY, {
+  const { error, data } = useQuery<TrioQuery, TrioQueryVariables>(TRIO_QUERY, {
     variables:
       day && month && year ? { anchor: `${year}/${month}/${day}` } : undefined,
   })
