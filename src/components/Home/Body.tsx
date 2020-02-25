@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
@@ -9,6 +9,18 @@ import { Emoji } from '../../types'
 
 const getDaySlug = (date: Date) =>
   `/day/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(0, 50vh, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+`
 
 const Container = styled.main`
   flex: 1 0;
@@ -26,6 +38,7 @@ const Hero = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation: ${slideIn} 1s cubic-bezier(0.165, 0.84, 0.44, 1);
 `
 
 const HeroEmoji = styled.span`
