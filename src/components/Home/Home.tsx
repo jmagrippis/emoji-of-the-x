@@ -1,10 +1,10 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import { useRouter } from 'next/router'
 
 import { Body } from './Body'
-import { Meta } from '../Meta'
 
 const TRIO_QUERY = gql`
   query Trio($anchor: String) {
@@ -30,16 +30,12 @@ const TRIO_QUERY = gql`
     }
   }
 `
-const Home = () => {
-  const {
-    query: { anchorParts },
-  } = useRouter()
 
+const Home = () => {
+  const { year, month, day } = useParams()
   const { error, data } = useQuery(TRIO_QUERY, {
     variables:
-      anchorParts && Array.isArray(anchorParts)
-        ? { anchor: anchorParts.join('/') }
-        : undefined,
+      day && month && year ? { anchor: `${year}/${month}/${day}` } : undefined,
   })
 
   if (error) {
@@ -53,10 +49,10 @@ const Home = () => {
 
   return (
     <>
-      {data?.trio?.current && (
-        <Meta
-          title={`${data?.trio.current.character} is the emoji of the day - ${data?.trio.current.name}`}
-        />
+      {data?.trio && (
+        <Helmet>
+          <title>{data.trio.current.character} is the emoji of the day</title>
+        </Helmet>
       )}
       <Body
         previous={data?.trio?.previous}
