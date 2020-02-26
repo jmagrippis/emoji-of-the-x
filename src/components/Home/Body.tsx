@@ -51,11 +51,14 @@ export const Body = ({ current, previous, next }: Props) => {
     (direction: SlideDirection) => {
       if (previousLink && direction === SlideDirection.Left) {
         push(previousLink)
+        return true
       }
 
       if (nextLink && direction === SlideDirection.Right) {
         push(nextLink)
+        return true
       }
+      return false
     },
     [previousLink, nextLink, push]
   )

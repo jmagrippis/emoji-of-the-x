@@ -44,7 +44,7 @@ export enum SlideDirection {
 
 type Props = {
   emoji: Emoji | null | undefined
-  handleSlide: (direction: SlideDirection) => void
+  handleSlide: (direction: SlideDirection) => boolean
 }
 
 export const Hero = ({ emoji, handleSlide }: Props) => {
@@ -60,16 +60,24 @@ export const Hero = ({ emoji, handleSlide }: Props) => {
     opacity: 0,
   }))
   const bind = useDrag(
-    ({ down, movement: [mx], cancel }) => {
+    ({ down, movement: [mx], cancel, dragging }) => {
       if (!justSlid && vw / 3 - Math.abs(mx) < 0) {
-        handleSlide(mx < 0 ? SlideDirection.Left : SlideDirection.Right)
-        setJustSlid(true)
-        cancel && cancel()
-        set({ opacity: 0, x: 0, y: Math.floor(vh / 3), immediate: true })
-        return
+        const shouldReset = handleSlide(
+          mx < 0 ? SlideDirection.Left : SlideDirection.Right
+        )
+
+        if (shouldReset) {
+          setJustSlid(true)
+          cancel && cancel()
+          set({ opacity: 0, x: 0, y: Math.floor(vh / 3), immediate: true })
+          return
+        }
       }
 
-      set({ x: down ? mx : 0, opacity: 1 - (3 * Math.abs(mx)) / vw })
+      set({
+        x: down ? mx : 0,
+        opacity: dragging ? 1 - (3 * Math.abs(mx)) / vw : 1,
+      })
     },
     {
       bounds: { left: -xBoundary, right: xBoundary },
