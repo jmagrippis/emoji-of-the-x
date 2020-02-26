@@ -3,7 +3,7 @@ import { useSpring, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 import styled from 'styled-components'
 
-import { Emoji } from '../../types'
+import { Emoji, SlideDirection } from '../../types'
 import { theme } from '../theme'
 
 const getViewportWidth = () =>
@@ -37,11 +37,6 @@ const HeroName = styled.div`
 const HeroDate = styled.div`
   color: ${theme.colors.gray[500]};
 `
-
-export enum SlideDirection {
-  Left = 'left',
-  Right = 'right',
-}
 
 type Props = {
   emoji: Emoji | null | undefined
@@ -95,15 +90,19 @@ export const Hero = ({ emoji, handleSlide, show }: Props) => {
     }
   }, [justSlid, emoji, set])
 
-  return show && emoji ? (
+  return (
     <Container {...bind()} style={style}>
-      <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
-        {emoji.character}
-      </HeroEmoji>
-      <HeroName id="emoji-of-the-week-name">“{emoji.name}”</HeroName>
-      <HeroDate>
-        emoji of {new Date(parseInt(emoji.created_at)).toLocaleDateString()}
-      </HeroDate>
+      {show && emoji ? (
+        <>
+          <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
+            {emoji.character}
+          </HeroEmoji>
+          <HeroName id="emoji-of-the-week-name">“{emoji.name}”</HeroName>
+          <HeroDate>
+            emoji of {new Date(parseInt(emoji.created_at)).toLocaleDateString()}
+          </HeroDate>
+        </>
+      ) : null}
     </Container>
-  ) : null
+  )
 }

@@ -4,9 +4,9 @@ import styled from 'styled-components'
 
 import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
-import { Hero, SlideDirection } from './Hero'
+import { Hero } from './Hero'
 import { theme } from '../theme'
-import { Emoji } from '../../types'
+import { Emoji, SlideDirection } from '../../types'
 
 const getDaySlug = (date: Date) =>
   `/day/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
@@ -84,3 +84,5 @@ export const Body = ({ current, previous, next, loading }: Props) => {
     </Container>
   )
 }
+
+export default Body

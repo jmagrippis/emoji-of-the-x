@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import { Body } from './Body'
 import { TrioQuery, TrioQueryVariables } from '../../generated/graphql'
+
+const Body = lazy(() => import('./Body'))
 
 const TRIO_QUERY = gql`
   query Trio($anchor: String) {
@@ -61,12 +62,14 @@ const Home = () => {
           </title>
         </Helmet>
       )}
-      <Body
-        previous={data?.trio?.previous}
-        current={data?.trio?.current}
-        next={data?.trio?.next}
-        loading={loading}
-      />
+      <Suspense fallback={null}>
+        <Body
+          previous={data?.trio?.previous}
+          current={data?.trio?.current}
+          next={data?.trio?.next}
+          loading={loading}
+        />
+      </Suspense>
     </>
   )
 }

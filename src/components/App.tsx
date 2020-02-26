@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import './app.css'
 import { Header } from './Header'
 import { Footer } from './Footer'
-import { apolloClient } from '../apolloClient'
 import Home from './Home/Home'
+import { apolloClient } from '../apolloClient'
 
 const Container = styled.div`
   position: relative;
