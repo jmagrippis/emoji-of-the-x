@@ -36,9 +36,10 @@ type Props = {
   current?: Emoji | null
   previous?: Emoji | null
   next?: Emoji | null
+  loading: boolean
 }
 
-export const Body = ({ current, previous, next }: Props) => {
+export const Body = ({ current, previous, next, loading }: Props) => {
   const { push } = useHistory()
   const previousLink = previous
     ? getDaySlug(new Date(parseInt(previous.created_at)))
@@ -72,7 +73,7 @@ export const Body = ({ current, previous, next }: Props) => {
           </Link>
         )}
       </ArrowContainer>
-      <Hero emoji={current} handleSlide={handleSlide} />
+      <Hero emoji={current} handleSlide={handleSlide} show={!loading} />
       <ArrowContainer>
         {nextLink && (
           <Link to={nextLink}>

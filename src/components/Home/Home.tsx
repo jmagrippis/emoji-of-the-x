@@ -51,7 +51,7 @@ const Home = () => {
     )
   }
 
-  return !loading ? (
+  return (
     <>
       {data?.trio && (
         <Helmet>
@@ -65,9 +65,10 @@ const Home = () => {
         previous={data?.trio?.previous}
         current={data?.trio?.current}
         next={data?.trio?.next}
+        loading={loading}
       />
     </>
-  ) : null
+  )
 }
 
 export default Home

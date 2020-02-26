@@ -4,18 +4,23 @@ import { useDrag } from 'react-use-gesture'
 import styled from 'styled-components'
 
 import { Emoji } from '../../types'
+import { theme } from '../theme'
 
 const getViewportWidth = () =>
   Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
 const getViewportHeight = () =>
   Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
 
-const Container = styled.div`
+const Container = styled(animated.div)`
   flex: 1 0;
-  align-self: normal;
+  align-self: stretch;
+  cursor: pointer;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  touch-action: none;
+  user-select: none;
 `
 
 const HeroEmoji = styled.span`
@@ -26,15 +31,11 @@ const HeroEmoji = styled.span`
 const HeroName = styled.div`
   font-size: 1.25rem;
   text-align: center;
+  margin-bottom: 0.5rem;
 `
 
-const Animated = styled(animated.div)`
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  touch-action: none;
-  user-select: none;
+const HeroDate = styled.div`
+  color: ${theme.colors.gray[500]};
 `
 
 export enum SlideDirection {
@@ -45,9 +46,10 @@ export enum SlideDirection {
 type Props = {
   emoji: Emoji | null | undefined
   handleSlide: (direction: SlideDirection) => boolean
+  show: boolean
 }
 
-export const Hero = ({ emoji, handleSlide }: Props) => {
+export const Hero = ({ emoji, handleSlide, show }: Props) => {
   const vw = getViewportWidth()
   const vh = getViewportHeight()
   const xBoundary = vw / 3
@@ -61,7 +63,7 @@ export const Hero = ({ emoji, handleSlide }: Props) => {
   }))
   const bind = useDrag(
     ({ down, movement: [mx], cancel, dragging }) => {
-      if (!justSlid && vw / 3 - Math.abs(mx) < 0) {
+      if (!justSlid && vw / 4 - Math.abs(mx) < 0) {
         const shouldReset = handleSlide(
           mx < 0 ? SlideDirection.Left : SlideDirection.Right
         )
@@ -93,16 +95,15 @@ export const Hero = ({ emoji, handleSlide }: Props) => {
     }
   }, [justSlid, emoji, set])
 
-  return (
-    <Container>
-      {emoji && (
-        <Animated {...bind()} style={style}>
-          <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
-            {emoji.character}
-          </HeroEmoji>
-          <HeroName id="emoji-of-the-week-name">“{emoji.name}”</HeroName>
-        </Animated>
-      )}
+  return show && emoji ? (
+    <Container {...bind()} style={style}>
+      <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
+        {emoji.character}
+      </HeroEmoji>
+      <HeroName id="emoji-of-the-week-name">“{emoji.name}”</HeroName>
+      <HeroDate>
+        emoji of {new Date(parseInt(emoji.created_at)).toLocaleDateString()}
+      </HeroDate>
     </Container>
-  )
+  ) : null
 }
