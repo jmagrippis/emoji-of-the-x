@@ -34,9 +34,9 @@ const TRIO_QUERY = gql`
 
 const Home = () => {
   const { year, month, day } = useParams()
+  const anchor = day && month && year ? `${year}/${month}/${day}` : null
   const { error, data } = useQuery<TrioQuery, TrioQueryVariables>(TRIO_QUERY, {
-    variables:
-      day && month && year ? { anchor: `${year}/${month}/${day}` } : undefined,
+    variables: { anchor },
   })
 
   if (error) {
@@ -52,7 +52,10 @@ const Home = () => {
     <>
       {data?.trio && (
         <Helmet>
-          <title>{data.trio.current.character} is the emoji of the day</title>
+          <title>
+            {data.trio.current.character} {anchor ? 'was' : 'is'} the emoji of
+            the day - {data.trio.current.name}
+          </title>
         </Helmet>
       )}
       <Body
