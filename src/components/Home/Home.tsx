@@ -35,9 +35,12 @@ const TRIO_QUERY = gql`
 const Home = () => {
   const { year, month, day } = useParams()
   const anchor = day && month && year ? `${year}/${month}/${day}` : null
-  const { error, data } = useQuery<TrioQuery, TrioQueryVariables>(TRIO_QUERY, {
-    variables: { anchor },
-  })
+  const { loading, error, data } = useQuery<TrioQuery, TrioQueryVariables>(
+    TRIO_QUERY,
+    {
+      variables: { anchor },
+    }
+  )
 
   if (error) {
     return (
@@ -48,7 +51,7 @@ const Home = () => {
     )
   }
 
-  return (
+  return !loading ? (
     <>
       {data?.trio && (
         <Helmet>
@@ -64,7 +67,7 @@ const Home = () => {
         next={data?.trio?.next}
       />
     </>
-  )
+  ) : null
 }
 
 export default Home

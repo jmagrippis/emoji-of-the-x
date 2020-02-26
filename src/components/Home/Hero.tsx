@@ -1,31 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 
 import { Emoji } from '../../types'
-import { theme } from '../theme'
 
 const getViewportWidth = () =>
   Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-const slideIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translate3d(0, 50vh, 0);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-`
+const getViewportHeight = () =>
+  Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
 
 const Container = styled.div`
   flex: 1 0;
-  animation: ${slideIn} 1s ${theme.easing};
   align-self: normal;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
 `
 
@@ -36,6 +25,7 @@ const HeroEmoji = styled.span`
 
 const HeroName = styled.div`
   font-size: 1.25rem;
+  text-align: center;
 `
 
 const Animated = styled(animated.div)`
@@ -43,6 +33,8 @@ const Animated = styled(animated.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  touch-action: none;
+  user-select: none;
 `
 
 export enum SlideDirection {
@@ -57,37 +49,46 @@ type Props = {
 
 export const Hero = ({ emoji, handleSlide }: Props) => {
   const vw = getViewportWidth()
-  const yBoundary = vw / 3
+  const vh = getViewportHeight()
+  const xBoundary = vw / 3
 
   const [justSlid, setJustSlid] = useState(false)
-  const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
+
+  const [style, set] = useSpring(() => ({
+    x: 0,
+    y: Math.floor(vh / 3),
+    opacity: 0,
+  }))
   const bind = useDrag(
-    ({ swipe, down, movement: [mx, my] }) => {
-      if (!justSlid && vw / 5 - Math.abs(mx) < 0) {
+    ({ down, movement: [mx], cancel }) => {
+      if (!justSlid && vw / 3 - Math.abs(mx) < 0) {
         handleSlide(mx < 0 ? SlideDirection.Left : SlideDirection.Right)
         setJustSlid(true)
+        cancel && cancel()
+        set({ opacity: 0, x: 0, y: Math.floor(vh / 3), immediate: true })
+        return
       }
 
-      set({ x: down ? mx : 0, y: down ? my : 0 })
+      set({ x: down ? mx : 0, opacity: 1 - (3 * Math.abs(mx)) / vw })
     },
     {
-      bounds: { left: -yBoundary, right: yBoundary },
+      bounds: { left: -xBoundary, right: xBoundary },
       rubberband: true,
+      axis: 'x',
     }
   )
 
   useEffect(() => {
+    set({ opacity: 1, y: 0 })
     if (justSlid) {
-      setTimeout(() => {
-        setJustSlid(false)
-      }, 1000)
+      setJustSlid(false)
     }
-  }, [justSlid])
+  }, [justSlid, emoji, set])
 
   return (
     <Container>
       {emoji && (
-        <Animated {...bind()} style={{ x, y }}>
+        <Animated {...bind()} style={style}>
           <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
             {emoji.character}
           </HeroEmoji>
