@@ -1,10 +1,10 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
-import { Hero } from './Hero'
+import { Hero, SlideDirection } from './Hero'
 import { theme } from '../theme'
 import { Emoji } from '../../types'
 
@@ -16,6 +16,7 @@ const Container = styled.main`
   align-self: normal;
   display: flex;
   align-items: center;
+  overflow: hidden;
 `
 const ArrowContainer = styled.div`
   flex-basis: 4rem;
@@ -37,26 +38,45 @@ type Props = {
   next?: Emoji | null
 }
 
-export const Body = ({ current, previous, next }: Props) => (
-  <Container>
-    <ArrowContainer>
-      {previous && (
-        <Link
-          to={
-            previous ? getDaySlug(new Date(parseInt(previous.created_at))) : '/'
-          }
-        >
-          <ArrowBack width="4rem" />
-        </Link>
-      )}
-    </ArrowContainer>
-    <Hero emoji={current} />
-    <ArrowContainer>
-      {next && (
-        <Link to={next ? getDaySlug(new Date(parseInt(next.created_at))) : '/'}>
-          <ArrowForward width="4rem" />
-        </Link>
-      )}
-    </ArrowContainer>
-  </Container>
-)
+export const Body = ({ current, previous, next }: Props) => {
+  const { push } = useHistory()
+  const previousLink = previous
+    ? getDaySlug(new Date(parseInt(previous.created_at)))
+    : undefined
+  const nextLink = next
+    ? getDaySlug(new Date(parseInt(next.created_at)))
+    : undefined
+
+  const handleSlide = useCallback(
+    (direction: SlideDirection) => {
+      if (previousLink && direction === SlideDirection.Left) {
+        push(previousLink)
+      }
+
+      if (nextLink && direction === SlideDirection.Right) {
+        push(nextLink)
+      }
+    },
+    [previousLink, nextLink, push]
+  )
+
+  return (
+    <Container>
+      <ArrowContainer>
+        {previousLink && (
+          <Link to={previousLink}>
+            <ArrowBack width="4rem" />
+          </Link>
+        )}
+      </ArrowContainer>
+      <Hero emoji={current} handleSlide={handleSlide} />
+      <ArrowContainer>
+        {nextLink && (
+          <Link to={nextLink}>
+            <ArrowForward width="4rem" />
+          </Link>
+        )}
+      </ArrowContainer>
+    </Container>
+  )
+}
