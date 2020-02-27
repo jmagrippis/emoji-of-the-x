@@ -126,7 +126,7 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
         <>
           <Helmet>
             <title>
-              {data.emoji.character} - emoji of the ${data.emoji.type}
+              {data.emoji.character} - emoji of the {data.emoji.type}
             </title>
           </Helmet>
           <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
