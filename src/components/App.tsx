@@ -25,7 +25,16 @@ export const App = () => (
     <BrowserRouter>
       <Container>
         <Header />
-        <Route path={['/', '/day/:year/:month/:day']} exact>
+        <Route
+          path={[
+            '/',
+            '/:type',
+            '/:type/:year/:month/:day',
+            '/:type/:year/:month',
+            '/:type/:year/:week',
+          ]}
+          exact
+        >
           <Home />
         </Route>
         <Footer />

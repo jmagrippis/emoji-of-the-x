@@ -7,7 +7,7 @@ import { ReactComponent as ArrowForward } from './arrow_forward.svg'
 import Hero from './Hero'
 import { theme } from '../theme'
 import { SlideDirection } from '../../types'
-import { EmojisQuery } from '../../generated/graphql'
+import { EmojisQuery, EmojiType } from '../../generated/graphql'
 
 const Container = styled.main`
   flex: 1 0;
@@ -34,38 +34,83 @@ type Props = {
   emojis?: EmojisQuery['emojis'] | null
 }
 
-const getPreviousCurrentNext = (
-  emojis?: EmojisQuery['emojis'] | null,
-  routeAnchor?: string | null
+type Params = {
+  day?: string
+  month?: string
+  year?: string
+  week?: string
+}
+
+const getCurrentIndexAndType = (
+  emojis: EmojisQuery['emojis'] | null | undefined,
+  { day, month, year, week }: Params
 ) => {
-  const currentIndex = routeAnchor
-    ? emojis?.findIndex(({ anchor }) => anchor === routeAnchor)
-    : 0
+  const type = emojis ? emojis[0].type : EmojiType.Day
+
+  switch (type) {
+    case EmojiType.Day: {
+      const routeAnchor =
+        day && month && year ? `${year}/${month}/${day}` : null
+      const currentIndex = routeAnchor
+        ? emojis?.findIndex(({ anchor }) => anchor === routeAnchor)
+        : 0
+
+      return { type, currentIndex }
+    }
+    case EmojiType.Month: {
+      const routeAnchor = month && year ? `${year}/${month}` : null
+      const currentIndex = routeAnchor
+        ? emojis?.findIndex(({ anchor }) => anchor === routeAnchor)
+        : 0
+
+      return { type, currentIndex }
+    }
+    case EmojiType.Week: {
+      const routeAnchor = week && year ? `${year}/${week}` : null
+      const currentIndex = routeAnchor
+        ? emojis?.findIndex(({ anchor }) => anchor === routeAnchor)
+        : 0
+
+      return { type, currentIndex }
+    }
+    default:
+      return {
+        type,
+        currentIndex: 0,
+      }
+  }
+}
+const parseParams = (
+  emojis: EmojisQuery['emojis'] | null | undefined,
+  params: Params
+) => {
+  const { currentIndex, type } = getCurrentIndexAndType(emojis, params)
+
+  const previous =
+    emojis && currentIndex !== undefined ? emojis[currentIndex + 1] : null
+  const current =
+    emojis && currentIndex !== undefined ? emojis[currentIndex] : null
+  const next =
+    emojis && currentIndex !== undefined ? emojis[currentIndex - 1] : null
+
+  const previousLink = previous && `/${type}/${previous.anchor}`
+  const nextLink = next && `/${type}/${next.anchor}`
 
   return {
-    previous:
-      emojis && currentIndex !== undefined ? emojis[currentIndex + 1] : null,
-    current: emojis && currentIndex !== undefined ? emojis[currentIndex] : null,
-    next:
-      emojis && currentIndex !== undefined ? emojis[currentIndex - 1] : null,
+    current,
+    previousLink,
+    nextLink,
   }
 }
 
 export const Body = ({ emojis }: Props) => {
-  const { year, month, day } = useParams()
+  const params = useParams<Params>()
   const { push } = useHistory()
 
-  const { previous, current, next } = getPreviousCurrentNext(
-    emojis,
-    day && month && year ? `${year}/${month}/${day}` : null
-  )
-
-  const previousLink = previous && `/day/${previous.anchor}`
-  const nextLink = next && `/day/${next.anchor}`
+  const { current, previousLink, nextLink } = parseParams(emojis, params)
 
   const handleSlide = useCallback(
     (direction: SlideDirection) => {
-      console.log({ previousLink, nextLink })
       if (previousLink && direction === SlideDirection.Left) {
         push(previousLink)
         return true
