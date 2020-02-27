@@ -6,10 +6,8 @@ import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
 import { Hero } from './Hero'
 import { theme } from '../theme'
-import { Emoji, SlideDirection } from '../../types'
-
-const getDaySlug = (date: Date) =>
-  `/day/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+import { SlideDirection } from '../../types'
+import { EmojisQuery } from '../../generated/graphql'
 
 const Container = styled.main`
   flex: 1 0;
@@ -33,20 +31,15 @@ const ArrowContainer = styled.div`
 `
 
 type Props = {
-  current?: Emoji | null
-  previous?: Emoji | null
-  next?: Emoji | null
-  loading: boolean
+  current?: EmojisQuery['emojis'][0] | null
+  previous?: EmojisQuery['emojis'][0] | null
+  next?: EmojisQuery['emojis'][0] | null
 }
 
-export const Body = ({ current, previous, next, loading }: Props) => {
+export const Body = ({ current, previous, next }: Props) => {
   const { push } = useHistory()
-  const previousLink = previous
-    ? getDaySlug(new Date(parseInt(previous.created_at)))
-    : undefined
-  const nextLink = next
-    ? getDaySlug(new Date(parseInt(next.created_at)))
-    : undefined
+  const previousLink = previous ? `/day/${previous.anchor}` : undefined
+  const nextLink = next ? `/day/${next.anchor}` : undefined
 
   const handleSlide = useCallback(
     (direction: SlideDirection) => {
@@ -73,7 +66,9 @@ export const Body = ({ current, previous, next, loading }: Props) => {
           </Link>
         )}
       </ArrowContainer>
-      <Hero emoji={current} handleSlide={handleSlide} show={!loading} />
+      {current ? (
+        <Hero id={current?.id} type={current?.type} handleSlide={handleSlide} />
+      ) : null}
       <ArrowContainer>
         {nextLink && (
           <Link to={nextLink}>

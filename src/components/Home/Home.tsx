@@ -1,76 +1,57 @@
 import React, { lazy, Suspense } from 'react'
 import { useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
-import { TrioQuery, TrioQueryVariables } from '../../generated/graphql'
+import { ErrorNotice } from '../ErrorNotice'
+import {
+  EmojisQuery,
+  EmojisQueryVariables,
+  EmojiType,
+} from '../../generated/graphql'
 
 const Body = lazy(() => import('./Body'))
 
-const TRIO_QUERY = gql`
-  query Trio($anchor: String) {
-    trio(anchor: $anchor) {
-      current {
-        id
-        character
-        name
-        created_at
-      }
-      next {
-        id
-        character
-        name
-        created_at
-      }
-      previous {
-        id
-        character
-        name
-        created_at
-      }
+const EMOJIS_QUERY = gql`
+  query Emojis($type: EmojiType!) {
+    emojis(type: $type) {
+      id
+      type
+      anchor
     }
   }
 `
 
 const Home = () => {
   const { year, month, day } = useParams()
-  const anchor = day && month && year ? `${year}/${month}/${day}` : null
-  const { loading, error, data } = useQuery<TrioQuery, TrioQueryVariables>(
-    TRIO_QUERY,
+  const routeAnchor = day && month && year ? `${year}/${month}/${day}` : null
+  const { error, data } = useQuery<EmojisQuery, EmojisQueryVariables>(
+    EMOJIS_QUERY,
     {
-      variables: { anchor },
+      variables: { type: EmojiType.Day },
     }
   )
 
   if (error) {
-    return (
-      <div>
-        <div>There's been an error.</div>{' '}
-        <div>It is with great same that I ask you to refresh.</div>
-      </div>
-    )
+    return <ErrorNotice />
   }
 
+  const currentIndex = routeAnchor
+    ? data?.emojis.findIndex(({ anchor }) => anchor === routeAnchor)
+    : 0
+
   return (
-    <>
-      {data?.trio && (
-        <Helmet>
-          <title>
-            {data.trio.current.character} {anchor ? 'was' : 'is'} the emoji of
-            the day - {data.trio.current.name}
-          </title>
-        </Helmet>
-      )}
-      <Suspense fallback={null}>
-        <Body
-          previous={data?.trio?.previous}
-          current={data?.trio?.current}
-          next={data?.trio?.next}
-          loading={loading}
-        />
-      </Suspense>
-    </>
+    <Suspense fallback={null}>
+      <Body
+        previous={
+          currentIndex !== undefined ? data?.emojis[currentIndex + 1] : null
+        }
+        current={currentIndex !== undefined ? data?.emojis[currentIndex] : null}
+        next={
+          currentIndex !== undefined ? data?.emojis[currentIndex - 1] : null
+        }
+      />
+    </Suspense>
   )
 }
 

@@ -2,9 +2,28 @@ import React, { useState, useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 import styled from 'styled-components'
+import { useQuery } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
+import { ErrorNotice } from '../ErrorNotice'
 
-import { Emoji, SlideDirection } from '../../types'
+import { SlideDirection } from '../../types'
 import { theme } from '../theme'
+import {
+  EmojiQuery,
+  EmojiQueryVariables,
+  EmojiType,
+} from '../../generated/graphql'
+
+const EMOJI_QUERY = gql`
+  query Emoji($id: ID!, $type: EmojiType!) {
+    emoji(id: $id, type: $type) {
+      id
+      character
+      name
+      created_at
+    }
+  }
+`
 
 const getViewportWidth = () =>
   Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
@@ -39,12 +58,18 @@ const HeroDate = styled.div`
 `
 
 type Props = {
-  emoji: Emoji | null | undefined
+  id: string
+  type: EmojiType
   handleSlide: (direction: SlideDirection) => boolean
-  show: boolean
 }
 
-export const Hero = ({ emoji, handleSlide, show }: Props) => {
+export const Hero = ({ id, type, handleSlide }: Props) => {
+  const { loading, error, data } = useQuery<EmojiQuery, EmojiQueryVariables>(
+    EMOJI_QUERY,
+    {
+      variables: { id, type },
+    }
+  )
   const vw = getViewportWidth()
   const vh = getViewportHeight()
   const xBoundary = vw / 3
@@ -84,22 +109,33 @@ export const Hero = ({ emoji, handleSlide, show }: Props) => {
   )
 
   useEffect(() => {
-    set({ opacity: 1, y: 0 })
-    if (justSlid) {
-      setJustSlid(false)
+    if (loading) {
+      set({ opacity: 0, y: Math.floor(vh / 3) })
+      return
     }
-  }, [justSlid, emoji, set])
+    if (!loading) {
+      set({ opacity: 1, y: 0 })
+      if (justSlid) {
+        setJustSlid(false)
+      }
+    }
+  }, [justSlid, loading, set, vh])
+
+  if (error) {
+    return <ErrorNotice />
+  }
 
   return (
     <Container {...bind()} style={style}>
-      {show && emoji ? (
+      {!loading && data?.emoji ? (
         <>
           <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
-            {emoji.character}
+            {data?.emoji.character}
           </HeroEmoji>
-          <HeroName id="emoji-of-the-week-name">“{emoji.name}”</HeroName>
+          <HeroName id="emoji-of-the-week-name">“{data?.emoji.name}”</HeroName>
           <HeroDate>
-            emoji of {new Date(parseInt(emoji.created_at)).toLocaleDateString()}
+            emoji of{' '}
+            {new Date(parseInt(data?.emoji.created_at)).toLocaleDateString()}
           </HeroDate>
         </>
       ) : null}

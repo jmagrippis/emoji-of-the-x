@@ -20,25 +20,36 @@ export type Emoji = {
   character: Scalars['String']
   name: Scalars['String']
   created_at: Scalars['String']
+  anchor: Scalars['String']
   type: EmojiType
 }
 
 export enum EmojiType {
-  Hour = 'hour',
   Day = 'day',
   Week = 'week',
   Month = 'month',
-  Year = 'year',
 }
 
 export type Query = {
   __typename?: 'Query'
+  emoji?: Maybe<Emoji>
+  emojis: Array<Emoji>
   trio: Trio
+}
+
+export type QueryEmojiArgs = {
+  id: Scalars['ID']
+  type: EmojiType
+}
+
+export type QueryEmojisArgs = {
+  anchor?: Maybe<Scalars['String']>
+  type: EmojiType
 }
 
 export type QueryTrioArgs = {
   anchor?: Maybe<Scalars['String']>
-  type?: Maybe<Scalars['String']>
+  type?: Maybe<EmojiType>
 }
 
 export type Trio = {
@@ -48,27 +59,26 @@ export type Trio = {
   next?: Maybe<Emoji>
 }
 
-export type TrioQueryVariables = {
-  anchor?: Maybe<Scalars['String']>
+export type EmojiQueryVariables = {
+  id: Scalars['ID']
+  type: EmojiType
 }
 
-export type TrioQuery = { __typename?: 'Query' } & {
-  trio: { __typename?: 'Trio' } & {
-    current: { __typename?: 'Emoji' } & Pick<
+export type EmojiQuery = { __typename?: 'Query' } & {
+  emoji: Maybe<
+    { __typename?: 'Emoji' } & Pick<
       Emoji,
       'id' | 'character' | 'name' | 'created_at'
     >
-    next: Maybe<
-      { __typename?: 'Emoji' } & Pick<
-        Emoji,
-        'id' | 'character' | 'name' | 'created_at'
-      >
-    >
-    previous: Maybe<
-      { __typename?: 'Emoji' } & Pick<
-        Emoji,
-        'id' | 'character' | 'name' | 'created_at'
-      >
-    >
-  }
+  >
+}
+
+export type EmojisQueryVariables = {
+  type: EmojiType
+}
+
+export type EmojisQuery = { __typename?: 'Query' } & {
+  emojis: Array<
+    { __typename?: 'Emoji' } & Pick<Emoji, 'id' | 'type' | 'anchor'>
+  >
 }
