@@ -18,6 +18,7 @@ const EMOJI_QUERY = gql`
   query Emoji($id: ID!, $type: EmojiType!) {
     emoji(id: $id, type: $type) {
       id
+      type
       character
       name
       created_at

@@ -68,7 +68,7 @@ export type EmojiQuery = { __typename?: 'Query' } & {
   emoji: Maybe<
     { __typename?: 'Emoji' } & Pick<
       Emoji,
-      'id' | 'character' | 'name' | 'created_at'
+      'id' | 'type' | 'character' | 'name' | 'created_at'
     >
   >
 }

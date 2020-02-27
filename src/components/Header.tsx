@@ -1,6 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+
 import { theme } from './theme'
 
 const Container = styled.header`
@@ -22,19 +23,31 @@ const Nav = styled.nav`
 
 const StyledLink = styled(Link)`
   color: ${theme.colors.green[900]};
+  margin: 0 0.125rem;
 `
 
-export const Header = () => (
-  <Container>
-    <Crown role="img" aria-label="the emoji crown">
-      {/* // eslint-disable-next-line the above is a span! */}
-      👑
-    </Crown>
-    <div>Emoji of the</div>
-    <Nav>
-      <StyledLink to="/">
-        <strong>day</strong>
-      </StyledLink>
-    </Nav>
-  </Container>
-)
+export const Header = () => {
+  const { type } = useParams()
+  return (
+    <Container>
+      <Crown role="img" aria-label="the emoji crown">
+        {/* // eslint-disable-next-line this IS an accessible span! */}
+        👑
+      </Crown>
+      <div>Emoji of the...</div>
+      <Nav>
+        <StyledLink to="/">
+          {!type || type === 'day' ? <strong>day</strong> : 'day'}
+        </StyledLink>
+        /
+        <StyledLink to="/week">
+          {type === 'week' ? <strong>week</strong> : 'week'}
+        </StyledLink>
+        /
+        <StyledLink to="/month">
+          {type === 'month' ? <strong>month</strong> : 'month'}
+        </StyledLink>
+      </Nav>
+    </Container>
+  )
+}

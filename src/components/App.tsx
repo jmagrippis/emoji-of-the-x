@@ -24,11 +24,12 @@ export const App = () => (
   <ApolloProvider client={apolloClient}>
     <BrowserRouter>
       <Container>
-        <Header />
+        <Route path={'/:type?'}>
+          <Header />
+        </Route>
         <Route
           path={[
-            '/',
-            '/:type',
+            '/:type?',
             '/:type/:year/:month/:day',
             '/:type/:year/:month',
             '/:type/:year/:week',
