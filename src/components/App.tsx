@@ -4,11 +4,13 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import styled from 'styled-components'
 
 import './app.css'
+import { ServiceWorkerProvider } from './ServiceWorker/ServiceWorkerProvider'
+import { Notice } from './ServiceWorker/Notice'
 import { Header } from './Header'
 import { Footer } from './Footer'
 import Home from './Home/Home'
-import { apolloClient } from '../apolloClient'
 import { About } from './About/About'
+import { apolloClient } from '../apolloClient'
 
 const Container = styled.div`
   position: relative;
@@ -22,30 +24,33 @@ const Container = styled.div`
 `
 
 export const App = () => (
-  <ApolloProvider client={apolloClient}>
-    <BrowserRouter>
-      <Container>
-        <Route path={'/:type?'}>
-          <Header />
-        </Route>
-        <Switch>
-          <Route path="/about">
-            <About />
+  <ServiceWorkerProvider>
+    <ApolloProvider client={apolloClient}>
+      <BrowserRouter>
+        <Container>
+          <Route path={'/:type?'}>
+            <Header />
           </Route>
-          <Route
-            path={[
-              '/:type?',
-              '/:type/:year/:month/:day',
-              '/:type/:year/:month',
-              '/:type/:year/:week',
-            ]}
-            exact
-          >
-            <Home />
-          </Route>
-        </Switch>
-        <Footer />
-      </Container>
-    </BrowserRouter>
-  </ApolloProvider>
+          <Switch>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route
+              path={[
+                '/:type?',
+                '/:type/:year/:month/:day',
+                '/:type/:year/:month',
+                '/:type/:year/:week',
+              ]}
+              exact
+            >
+              <Home />
+            </Route>
+          </Switch>
+          <Notice />
+          <Footer />
+        </Container>
+      </BrowserRouter>
+    </ApolloProvider>
+  </ServiceWorkerProvider>
 )
