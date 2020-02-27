@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
-import { Hero } from './Hero'
+import Hero from './Hero'
 import { theme } from '../theme'
 import { SlideDirection } from '../../types'
 import { EmojisQuery } from '../../generated/graphql'
@@ -31,18 +31,41 @@ const ArrowContainer = styled.div`
 `
 
 type Props = {
-  current?: EmojisQuery['emojis'][0] | null
-  previous?: EmojisQuery['emojis'][0] | null
-  next?: EmojisQuery['emojis'][0] | null
+  emojis?: EmojisQuery['emojis'] | null
 }
 
-export const Body = ({ current, previous, next }: Props) => {
+const getPreviousCurrentNext = (
+  emojis?: EmojisQuery['emojis'] | null,
+  routeAnchor?: string | null
+) => {
+  const currentIndex = routeAnchor
+    ? emojis?.findIndex(({ anchor }) => anchor === routeAnchor)
+    : 0
+
+  return {
+    previous:
+      emojis && currentIndex !== undefined ? emojis[currentIndex + 1] : null,
+    current: emojis && currentIndex !== undefined ? emojis[currentIndex] : null,
+    next:
+      emojis && currentIndex !== undefined ? emojis[currentIndex - 1] : null,
+  }
+}
+
+export const Body = ({ emojis }: Props) => {
+  const { year, month, day } = useParams()
   const { push } = useHistory()
-  const previousLink = previous ? `/day/${previous.anchor}` : undefined
-  const nextLink = next ? `/day/${next.anchor}` : undefined
+
+  const { previous, current, next } = getPreviousCurrentNext(
+    emojis,
+    day && month && year ? `${year}/${month}/${day}` : null
+  )
+
+  const previousLink = previous && `/day/${previous.anchor}`
+  const nextLink = next && `/day/${next.anchor}`
 
   const handleSlide = useCallback(
     (direction: SlideDirection) => {
+      console.log({ previousLink, nextLink })
       if (previousLink && direction === SlideDirection.Left) {
         push(previousLink)
         return true

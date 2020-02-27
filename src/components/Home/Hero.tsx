@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 import styled from 'styled-components'
@@ -74,8 +74,6 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
   const vh = getViewportHeight()
   const xBoundary = vw / 3
 
-  const [justSlid, setJustSlid] = useState(false)
-
   const [style, set] = useSpring(() => ({
     x: 0,
     y: Math.floor(vh / 3),
@@ -83,13 +81,12 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
   }))
   const bind = useDrag(
     ({ down, movement: [mx], cancel, dragging }) => {
-      if (!justSlid && vw / 4 - Math.abs(mx) < 0) {
+      if (dragging && vw / 4 - Math.abs(mx) < 0) {
         const shouldReset = handleSlide(
           mx < 0 ? SlideDirection.Left : SlideDirection.Right
         )
 
         if (shouldReset) {
-          setJustSlid(true)
           cancel && cancel()
           set({ opacity: 0, x: 0, y: Math.floor(vh / 3), immediate: true })
           return
@@ -110,16 +107,12 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
 
   useEffect(() => {
     if (loading) {
-      set({ opacity: 0, y: Math.floor(vh / 3) })
+      set({ opacity: 0, y: Math.floor(vh / 3), immediate: true })
       return
-    }
-    if (!loading) {
+    } else {
       set({ opacity: 1, y: 0 })
-      if (justSlid) {
-        setJustSlid(false)
-      }
     }
-  }, [justSlid, loading, set, vh])
+  }, [id, loading, set, vh])
 
   if (error) {
     return <ErrorNotice />
@@ -142,3 +135,5 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
     </Container>
   )
 }
+
+export default React.memo(Hero)

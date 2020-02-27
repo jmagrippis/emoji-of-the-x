@@ -1,5 +1,4 @@
 import React, { lazy, Suspense } from 'react'
-import { useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -23,9 +22,7 @@ const EMOJIS_QUERY = gql`
 `
 
 const Home = () => {
-  const { year, month, day } = useParams()
-  const routeAnchor = day && month && year ? `${year}/${month}/${day}` : null
-  const { error, data } = useQuery<EmojisQuery, EmojisQueryVariables>(
+  const { loading, error, data } = useQuery<EmojisQuery, EmojisQueryVariables>(
     EMOJIS_QUERY,
     {
       variables: { type: EmojiType.Day },
@@ -36,23 +33,11 @@ const Home = () => {
     return <ErrorNotice />
   }
 
-  const currentIndex = routeAnchor
-    ? data?.emojis.findIndex(({ anchor }) => anchor === routeAnchor)
-    : 0
-
-  return (
+  return !loading ? (
     <Suspense fallback={null}>
-      <Body
-        previous={
-          currentIndex !== undefined ? data?.emojis[currentIndex + 1] : null
-        }
-        current={currentIndex !== undefined ? data?.emojis[currentIndex] : null}
-        next={
-          currentIndex !== undefined ? data?.emojis[currentIndex - 1] : null
-        }
-      />
+      <Body emojis={data?.emojis} />
     </Suspense>
-  )
+  ) : null
 }
 
 export default Home
