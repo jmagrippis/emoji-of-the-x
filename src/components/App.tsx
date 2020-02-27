@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { ApolloProvider } from '@apollo/react-hooks'
 import styled from 'styled-components'
 
@@ -8,6 +8,7 @@ import { Header } from './Header'
 import { Footer } from './Footer'
 import Home from './Home/Home'
 import { apolloClient } from '../apolloClient'
+import { About } from './About/About'
 
 const Container = styled.div`
   position: relative;
@@ -27,17 +28,22 @@ export const App = () => (
         <Route path={'/:type?'}>
           <Header />
         </Route>
-        <Route
-          path={[
-            '/:type?',
-            '/:type/:year/:month/:day',
-            '/:type/:year/:month',
-            '/:type/:year/:week',
-          ]}
-          exact
-        >
-          <Home />
-        </Route>
+        <Switch>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route
+            path={[
+              '/:type?',
+              '/:type/:year/:month/:day',
+              '/:type/:year/:month',
+              '/:type/:year/:week',
+            ]}
+            exact
+          >
+            <Home />
+          </Route>
+        </Switch>
         <Footer />
       </Container>
     </BrowserRouter>

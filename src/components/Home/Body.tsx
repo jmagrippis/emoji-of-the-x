@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
 import Hero from './Hero'
+import { AboutButton } from './AboutButton'
 import { theme } from '../theme'
 import { SlideDirection } from '../../types'
 import { EmojisQuery, EmojiType } from '../../generated/graphql'
@@ -144,6 +145,7 @@ export const Body = ({ emojis }: Props) => {
           </Link>
         )}
       </ArrowContainer>
+      <AboutButton />
     </Container>
   )
 }

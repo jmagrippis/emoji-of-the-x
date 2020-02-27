@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
+import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import { ErrorNotice } from '../ErrorNotice'
 
+import { ErrorNotice } from '../ErrorNotice'
 import { SlideDirection } from '../../types'
 import { theme } from '../theme'
 import {
@@ -123,6 +124,11 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
     <Container {...bind()} style={style}>
       {!loading && data?.emoji ? (
         <>
+          <Helmet>
+            <title>
+              {data.emoji.character} - emoji of the ${data.emoji.type}
+            </title>
+          </Helmet>
           <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
             {data?.emoji.character}
           </HeroEmoji>

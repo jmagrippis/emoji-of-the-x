@@ -34,7 +34,7 @@ export const Header = () => {
         {/* // eslint-disable-next-line this IS an accessible span! */}
         👑
       </Crown>
-      <div>Emoji of the...</div>
+      <h1>Emoji of the...</h1>
       <Nav>
         <StyledLink to="/">
           {!type || type === 'day' ? <strong>day</strong> : 'day'}
