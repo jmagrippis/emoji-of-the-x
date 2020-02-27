@@ -35,6 +35,7 @@ export type Query = {
   emoji?: Maybe<Emoji>
   emojis: Array<Emoji>
   trio: Trio
+  hashtags: Array<Scalars['String']>
 }
 
 export type QueryEmojiArgs = {
@@ -58,6 +59,10 @@ export type Trio = {
   previous?: Maybe<Emoji>
   next?: Maybe<Emoji>
 }
+
+export type HashtagsQueryVariables = {}
+
+export type HashtagsQuery = { __typename?: 'Query' } & Pick<Query, 'hashtags'>
 
 export type EmojiQueryVariables = {
   id: Scalars['ID']

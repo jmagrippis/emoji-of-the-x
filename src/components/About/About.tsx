@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 
+import { Hashtags } from './Hashtags'
 import { theme } from '../theme'
 
 const Container = styled.h2`
@@ -12,21 +13,15 @@ const Container = styled.h2`
   section {
     padding-bottom: 0.5rem;
   }
+
   h2 {
     font-size: 1.875rem;
     margin-bottom: 0.5rem;
   }
 
-  p,
-  ul {
-    margin-bottom: 0.5rem;
-  }
   p {
+    margin-bottom: 0.5rem;
     font-size: 1.25rem;
-  }
-  ul {
-    font-size: 1.5rem;
-    text-align: center;
   }
 
   a {
@@ -128,17 +123,7 @@ export const About = () => (
             how about you try sharing your pictures on the gram? For the current
             picks, you could use:
           </p>
-          <ul>
-            <li>
-              <strong>#emoji_otd_🎗</strong>
-            </li>
-            <li>
-              <strong>#emoji_otw_🇺🇾</strong>
-            </li>
-            <li>
-              <strong>#emoji_otm_😚</strong>
-            </li>
-          </ul>
+          <Hashtags />
         </div>
       </section>
 
