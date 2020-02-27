@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
+import styles from './Hero.module.css'
 import { ErrorNotice } from '../ErrorNotice'
 import { SlideDirection } from '../../types'
 import { theme } from '../theme'
@@ -31,18 +32,6 @@ const getViewportWidth = () =>
   Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
 const getViewportHeight = () =>
   Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-
-const Container = styled(animated.div)`
-  flex: 1 0;
-  align-self: stretch;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  touch-action: none;
-  user-select: none;
-`
 
 const HeroEmoji = styled.span`
   font-size: 9rem;
@@ -121,7 +110,7 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
   }
 
   return (
-    <Container {...bind()} style={style}>
+    <animated.div className={styles.container} {...bind()} style={style}>
       {!loading && data?.emoji ? (
         <>
           <Helmet>
@@ -139,7 +128,7 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
           </HeroDate>
         </>
       ) : null}
-    </Container>
+    </animated.div>
   )
 }
 
