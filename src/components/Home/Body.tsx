@@ -131,7 +131,7 @@ export const Body = ({ emojis }: Props) => {
       <ArrowContainer>
         {previousLink && (
           <Link to={previousLink}>
-            <ArrowBack width="4rem" />
+            <ArrowBack width="4rem" aria-label="previous emoji" />
           </Link>
         )}
       </ArrowContainer>
@@ -141,7 +141,7 @@ export const Body = ({ emojis }: Props) => {
       <ArrowContainer>
         {nextLink && (
           <Link to={nextLink}>
-            <ArrowForward width="4rem" />
+            <ArrowForward width="4rem" aria-label="next emoji" />
           </Link>
         )}
       </ArrowContainer>
