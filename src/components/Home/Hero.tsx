@@ -74,7 +74,7 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
     ({ down, movement: [mx], cancel, dragging }) => {
       if (dragging && vw / 4 - Math.abs(mx) < 0) {
         const shouldReset = handleSlide(
-          mx < 0 ? SlideDirection.Left : SlideDirection.Right
+          mx > 0 ? SlideDirection.Left : SlideDirection.Right
         )
 
         if (shouldReset) {
