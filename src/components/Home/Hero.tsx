@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 import { Helmet } from 'react-helmet'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
@@ -14,6 +15,7 @@ import {
   EmojiQuery,
   EmojiQueryVariables,
   EmojiType,
+  Emoji,
 } from '../../generated/graphql'
 
 const EMOJI_QUERY = gql`
@@ -45,16 +47,39 @@ const HeroName = styled.div`
 `
 
 const HeroDate = styled.div`
-  color: ${theme.colors.gray[500]};
+  color: ${theme.colors.gray[600]};
 `
 
-type Props = {
-  id: string
-  type: EmojiType
+type Props = Pick<Emoji, 'id' | 'type'> & {
   handleSlide: (direction: SlideDirection) => boolean
 }
 
+const parseDateForType = ({
+  type,
+  date,
+  week,
+}: {
+  type: EmojiType
+  date: Date
+  week?: string
+}) => {
+  switch (type) {
+    case EmojiType.Month:
+      return date.toLocaleString('default', { month: 'long', year: 'numeric' })
+    case EmojiType.Week:
+      return `${
+        week ? `week ${week}` : 'current week'
+      } of ${date.toLocaleString('default', {
+        year: 'numeric',
+      })}`
+    case EmojiType.Day:
+    default:
+      return date.toLocaleDateString()
+  }
+}
+
 export const Hero = ({ id, type, handleSlide }: Props) => {
+  const { week } = useParams()
   const { loading, error, data } = useQuery<EmojiQuery, EmojiQueryVariables>(
     EMOJI_QUERY,
     {
@@ -124,7 +149,11 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
           <HeroName id="emoji-of-the-week-name">“{data?.emoji.name}”</HeroName>
           <HeroDate>
             emoji of{' '}
-            {new Date(parseInt(data?.emoji.created_at)).toLocaleDateString()}
+            {parseDateForType({
+              week,
+              type,
+              date: new Date(parseInt(data?.emoji.created_at)),
+            })}
           </HeroDate>
         </>
       ) : null}
