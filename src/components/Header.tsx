@@ -8,13 +8,18 @@ const Container = styled.header`
   align-self: normal;
   display: flex;
   align-items: center;
-  padding: 1.25rem 1rem;
+  padding: 1.25rem 0.5rem;
   background-color: ${theme.colors.green[300]};
   font-size: 1.25rem;
+
+  h1,
+  nav {
+    margin-top: 4px;
+  }
 `
 
 const Crown = styled.span`
-  padding: 0 1rem 0.25rem 0;
+  padding-right: 0.5rem;
 `
 
 const Nav = styled.nav`
@@ -30,12 +35,12 @@ export const Header = () => {
   const { type } = useParams()
   return (
     <Container>
-      <StyledLink to="/">
+      <Link to="/">
         <Crown role="img" aria-label="the emoji crown">
           {/* // eslint-disable-next-line this IS an accessible span! */}
           👑
         </Crown>
-      </StyledLink>
+      </Link>
       <h1>Emoji of the...</h1>
       <Nav>
         <StyledLink to="/">
