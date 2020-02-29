@@ -59,7 +59,7 @@ export const Notice = () => {
     }
   }, [update, registration])
 
-  return style.opacity.getValue() ? (
+  return (
     <Container onClick={onClick} style={style}>
       {success ? (
         <>
@@ -85,5 +85,5 @@ export const Notice = () => {
         </>
       ) : null}
     </Container>
-  ) : null
+  )
 }

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { theme } from '../theme'
 
 const Container = styled(animated.a)`
-  position: absolute;
+  position: fixed;
   color: ${theme.colors.gray[100]};
   background-color: ${theme.colors.green[400]};
   width: 3rem;

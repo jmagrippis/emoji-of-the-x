@@ -9,6 +9,7 @@ import { AboutButton } from './AboutButton'
 import { theme } from '../theme'
 import { SlideDirection } from '../../types'
 import { EmojisQuery, EmojiType } from '../../generated/graphql'
+import { Toast } from './Toast'
 
 const Container = styled.main`
   flex: 1 0;
@@ -127,26 +128,33 @@ export const Body = ({ emojis }: Props) => {
   )
 
   return (
-    <Container>
-      <ArrowContainer>
-        {previousLink && (
-          <Link to={previousLink}>
-            <ArrowBack width="4rem" aria-label="previous emoji" />
-          </Link>
-        )}
-      </ArrowContainer>
-      {current ? (
-        <Hero id={current?.id} type={current?.type} handleSlide={handleSlide} />
-      ) : null}
-      <ArrowContainer>
-        {nextLink && (
-          <Link to={nextLink}>
-            <ArrowForward width="4rem" aria-label="next emoji" />
-          </Link>
-        )}
-      </ArrowContainer>
-      <AboutButton />
-    </Container>
+    <>
+      <Container>
+        <ArrowContainer>
+          {previousLink && (
+            <Link to={previousLink}>
+              <ArrowBack width="4rem" aria-label="previous emoji" />
+            </Link>
+          )}
+        </ArrowContainer>
+        {current ? (
+          <Hero
+            id={current?.id}
+            type={current?.type}
+            handleSlide={handleSlide}
+          />
+        ) : null}
+        <ArrowContainer>
+          {nextLink && (
+            <Link to={nextLink}>
+              <ArrowForward width="4rem" aria-label="next emoji" />
+            </Link>
+          )}
+        </ArrowContainer>
+        <AboutButton />
+      </Container>
+      <Toast />
+    </>
   )
 }
 

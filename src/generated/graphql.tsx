@@ -34,7 +34,7 @@ export type Query = {
   __typename?: 'Query'
   emoji?: Maybe<Emoji>
   emojis: Array<Emoji>
-  trio: Trio
+  latestPicks: Array<Emoji>
   hashtags: Array<Scalars['String']>
 }
 
@@ -46,18 +46,6 @@ export type QueryEmojiArgs = {
 export type QueryEmojisArgs = {
   anchor?: Maybe<Scalars['String']>
   type: EmojiType
-}
-
-export type QueryTrioArgs = {
-  anchor?: Maybe<Scalars['String']>
-  type?: Maybe<EmojiType>
-}
-
-export type Trio = {
-  __typename?: 'Trio'
-  current: Emoji
-  previous?: Maybe<Emoji>
-  next?: Maybe<Emoji>
 }
 
 export type HashtagsQueryVariables = {}
@@ -85,5 +73,13 @@ export type EmojisQueryVariables = {
 export type EmojisQuery = { __typename?: 'Query' } & {
   emojis: Array<
     { __typename?: 'Emoji' } & Pick<Emoji, 'id' | 'type' | 'anchor'>
+  >
+}
+
+export type LatestPicksQueryVariables = {}
+
+export type LatestPicksQuery = { __typename?: 'Query' } & {
+  latestPicks: Array<
+    { __typename?: 'Emoji' } & Pick<Emoji, 'id' | 'type' | 'character' | 'name'>
   >
 }
