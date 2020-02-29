@@ -1,6 +1,7 @@
 {
   "short_name": "👑 Emoji",
   "name": "Emoji of the...",
+  "description": "The app which brings you its official emojis for the day, week and month",
   "icons": [
     {
       "src": "favicon.ico",
