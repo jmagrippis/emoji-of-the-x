@@ -30,10 +30,12 @@ export const Header = () => {
   const { type } = useParams()
   return (
     <Container>
-      <Crown role="img" aria-label="the emoji crown">
-        {/* // eslint-disable-next-line this IS an accessible span! */}
-        👑
-      </Crown>
+      <StyledLink to="/">
+        <Crown role="img" aria-label="the emoji crown">
+          {/* // eslint-disable-next-line this IS an accessible span! */}
+          👑
+        </Crown>
+      </StyledLink>
       <h1>Emoji of the...</h1>
       <Nav>
         <StyledLink to="/">
