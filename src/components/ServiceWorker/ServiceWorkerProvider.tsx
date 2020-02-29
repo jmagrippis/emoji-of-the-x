@@ -1,7 +1,13 @@
-import React, { Children, useState, useEffect, ReactNode } from 'react'
+import React, {
+  Children,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react'
 
-import * as serviceWorker from '../../serviceWorker'
 import { ServiceWorkerContext } from './ServiceWorkerContext'
+import { ServiceWorkerEvent } from '../../serviceWorker'
 
 type Props = {
   children: ReactNode
@@ -16,21 +22,28 @@ export const ServiceWorkerProvider = ({ children }: Props) => {
     setRegistration,
   ] = useState<ServiceWorkerRegistration | null>(null)
 
+  const handleSuccess = useCallback(({ detail }) => {
+    setSuccess(true)
+    setRegistration(detail)
+  }, [])
+
+  const handleUpdate = useCallback(({ detail }) => {
+    setUpdate(true)
+    setRegistration(detail)
+  }, [])
+
   useEffect(() => {
     if (!init) {
-      serviceWorker.register({
-        onSuccess: (registration) => {
-          setSuccess(true)
-          setRegistration(registration)
-        },
-        onUpdate: (registration) => {
-          setUpdate(true)
-          setRegistration(registration)
-        },
-      })
+      window.addEventListener(ServiceWorkerEvent.success, handleSuccess)
+      window.addEventListener(ServiceWorkerEvent.update, handleUpdate)
       setInit(true)
     }
-  }, [init])
+
+    return () => {
+      window.removeEventListener(ServiceWorkerEvent.success, handleSuccess)
+      window.removeEventListener(ServiceWorkerEvent.update, handleUpdate)
+    }
+  }, [init, handleSuccess, handleUpdate])
 
   return (
     <ServiceWorkerContext.Provider value={{ success, update, registration }}>
