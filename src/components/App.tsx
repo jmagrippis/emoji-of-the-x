@@ -11,6 +11,7 @@ import { Footer } from './Footer'
 import Home from './Home/Home'
 import { About } from './About/About'
 import { apolloClient } from '../apolloClient'
+import { useTracking } from './useTracking'
 
 const Container = styled.div`
   position: relative;
@@ -23,33 +24,41 @@ const Container = styled.div`
   justify-content: space-between;
 `
 
-export const App = () => (
+export const App = () => {
+  useTracking('UA-140091800-2')
+
+  return (
+    <Container>
+      <Route path={'/:type?'}>
+        <Header />
+      </Route>
+      <Switch>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route
+          path={[
+            '/:type?',
+            '/:type/:year/:month/:day',
+            '/:type/:year/:month',
+            '/:type/:year/:week',
+          ]}
+          exact
+        >
+          <Home />
+        </Route>
+      </Switch>
+      <Notice />
+      <Footer />
+    </Container>
+  )
+}
+
+export default () => (
   <ServiceWorkerProvider>
     <ApolloProvider client={apolloClient}>
       <BrowserRouter>
-        <Container>
-          <Route path={'/:type?'}>
-            <Header />
-          </Route>
-          <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route
-              path={[
-                '/:type?',
-                '/:type/:year/:month/:day',
-                '/:type/:year/:month',
-                '/:type/:year/:week',
-              ]}
-              exact
-            >
-              <Home />
-            </Route>
-          </Switch>
-          <Notice />
-          <Footer />
-        </Container>
+        <App />
       </BrowserRouter>
     </ApolloProvider>
   </ServiceWorkerProvider>
