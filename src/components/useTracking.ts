@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 declare global {
   interface Window {
-    gtag: (
+    gtag?: (
       key: string,
       trackingId: string,
       config: { page_path: string }
@@ -11,12 +11,20 @@ declare global {
   }
 }
 
-export const useTracking = (trackingId: string) => {
+export const useTracking = (
+  trackingId: string | undefined = process.env.GA_MEASUREMENT_ID
+) => {
   const { listen } = useHistory()
 
   useEffect(() => {
     const unlisten = listen((location) => {
       if (!window.gtag) return
+      if (!trackingId) {
+        console.log(
+          'Tracking not enabled, as `trackingId` was not given and there is no `GA_MEASUREMENT_ID`.'
+        )
+        return
+      }
 
       window.gtag('config', trackingId, { page_path: location.pathname })
     })
