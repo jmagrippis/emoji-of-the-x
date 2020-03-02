@@ -143,10 +143,10 @@ export const Hero = ({ id, type, handleSlide }: Props) => {
               {data.emoji.character} - emoji of the {data.emoji.type}
             </title>
           </Helmet>
-          <HeroEmoji role="img" aria-labelledby="emoji-of-the-week-name">
+          <HeroEmoji role="img" aria-labelledby="emoji-of-the-x-name">
             {data?.emoji.character}
           </HeroEmoji>
-          <HeroName id="emoji-of-the-week-name">“{data?.emoji.name}”</HeroName>
+          <HeroName id="emoji-of-the-x-name">“{data?.emoji.name}”</HeroName>
           <HeroDate>
             emoji of{' '}
             {parseDateForType({

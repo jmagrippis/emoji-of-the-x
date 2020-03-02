@@ -1,8 +1,9 @@
 import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { theme } from './theme'
+import { EmojiType } from '../generated/graphql'
 
 const Container = styled.header`
   align-self: normal;
@@ -32,7 +33,9 @@ const StyledLink = styled(Link)`
 `
 
 export const Header = () => {
-  const { type } = useParams()
+  const match = useRouteMatch<{ type: string }>('/:type')
+  const type = match ? match.params.type : EmojiType.Day
+
   return (
     <Container>
       <Link to="/">
@@ -44,15 +47,15 @@ export const Header = () => {
       <h1>Emoji of the...</h1>
       <Nav>
         <StyledLink to="/">
-          {!type || type === 'day' ? <strong>day</strong> : 'day'}
+          {!type || type === EmojiType.Day ? <strong>day</strong> : 'day'}
         </StyledLink>
         /
         <StyledLink to="/week">
-          {type === 'week' ? <strong>week</strong> : 'week'}
+          {type === EmojiType.Week ? <strong>week</strong> : 'week'}
         </StyledLink>
         /
         <StyledLink to="/month">
-          {type === 'month' ? <strong>month</strong> : 'month'}
+          {type === EmojiType.Month ? <strong>month</strong> : 'month'}
         </StyledLink>
       </Nav>
     </Container>

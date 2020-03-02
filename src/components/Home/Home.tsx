@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react'
-import { useParams } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
@@ -26,13 +26,13 @@ const isEmojiType = (type: any): type is EmojiType =>
   Object.values(EmojiType).includes(type)
 
 const Home = () => {
-  const { type } = useParams()
+  const match = useRouteMatch<{ type: string }>('/:type')
+  const type =
+    match && isEmojiType(match.params.type) ? match.params.type : EmojiType.Day
   const { loading, error, data } = useQuery<EmojisQuery, EmojisQueryVariables>(
     EMOJIS_QUERY,
     {
-      variables: {
-        type: isEmojiType(type) ? type : EmojiType.Day,
-      },
+      variables: { type },
     }
   )
 

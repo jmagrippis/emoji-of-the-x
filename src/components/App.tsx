@@ -39,9 +39,9 @@ export const App = () => {
         <Route
           path={[
             '/:type?',
-            '/:type/:year/:month/:day',
-            '/:type/:year/:month',
-            '/:type/:year/:week',
+            '/day/:year/:month/:day',
+            '/week/:year/:week',
+            '/month/:year/:month',
           ]}
           exact
         >
