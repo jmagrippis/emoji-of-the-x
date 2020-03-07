@@ -6,10 +6,11 @@ import { ReactComponent as ArrowBack } from './arrow_back.svg'
 import { ReactComponent as ArrowForward } from './arrow_forward.svg'
 import Hero from './Hero'
 import { AboutButton } from './AboutButton'
+import { Toast } from './Toast'
 import { theme } from '../theme'
+import { trackEvent, Action } from '../useTracking'
 import { SlideDirection } from '../../types'
 import { EmojisQuery, EmojiType } from '../../generated/graphql'
-import { Toast } from './Toast'
 
 const Container = styled.main`
   flex: 1 0;
@@ -113,16 +114,42 @@ export const Body = ({ emojis }: Props) => {
 
   const handleSlide = useCallback(
     (direction: SlideDirection) => {
-      if (previousLink && direction === SlideDirection.Left) {
-        push(previousLink)
-        return true
+      switch (direction) {
+        case SlideDirection.Left:
+          if (previousLink) {
+            push(previousLink)
+            trackEvent(Action.Swipe, {
+              event_category: 'engagement',
+              event_label: 'navigation',
+              value: 1,
+            })
+            return true
+          }
+          trackEvent(Action.SwipeToNowhere, {
+            event_category: 'engagement',
+            event_label: 'navigation',
+            value: 1,
+          })
+          return false
+        case SlideDirection.Right:
+          if (nextLink) {
+            push(nextLink)
+            trackEvent(Action.Swipe, {
+              event_category: 'engagement',
+              event_label: 'navigation',
+              value: 2,
+            })
+            return true
+          }
+          trackEvent(Action.SwipeToNowhere, {
+            event_category: 'engagement',
+            event_label: 'navigation',
+            value: 2,
+          })
+          return false
+        default:
+          return false
       }
-
-      if (nextLink && direction === SlideDirection.Right) {
-        push(nextLink)
-        return true
-      }
-      return false
     },
     [previousLink, nextLink, push]
   )
