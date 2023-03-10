@@ -16,3 +16,5 @@ The current stack is:
 ## Related video content
 
 Johnny often livestreams development over at [YouTube](https://www.youtube.com/@jmagrippis)
+
+- [🔴 LIVESTREAM: Initial project setup & scraping with Happy DOM](https://www.youtube.com/watch?v=dc5rRLHNPbg)
