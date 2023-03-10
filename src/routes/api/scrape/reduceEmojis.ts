@@ -2,7 +2,7 @@ import {Window} from 'happy-dom'
 type Emoji = {
 	code: string
 	character: string
-	shortName: string
+	name: string
 }
 export const reduceEmojis = (html: string) => {
 	const window = new Window()
@@ -14,8 +14,8 @@ export const reduceEmojis = (html: string) => {
 		if (isItEmojiRow) {
 			const code = row.querySelector('td.code').textContent
 			const character = row.querySelector('td.chars').textContent
-			const shortName = row.querySelector('td.name').textContent
-			acc.push({code, character, shortName})
+			const name = row.querySelector('td.name').textContent
+			acc.push({code, character, name})
 		}
 		return acc
 	}, [])

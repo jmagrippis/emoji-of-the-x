@@ -7,9 +7,7 @@ import {isValidTheme} from '../hooks.server'
 const TEN_YEARS_IN_SECONDS = 10 * 365 * 24 * 60 * 60
 
 export const load: PageServerLoad = async ({fetch}) => {
-	const emoji = await fetch(`/api/scrape?apiKey=${CRON_API_KEY}`).then((response) =>
-		response.json()
-	)
+	const emoji = await fetch(`/api/pick?apiKey=${CRON_API_KEY}`).then((response) => response.json())
 
 	return {emoji}
 }

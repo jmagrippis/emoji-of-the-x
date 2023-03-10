@@ -15,10 +15,10 @@ it('returns objects with an emoji character', () => {
 	expect(emojis[10].character).toBe('🫠')
 })
 
-it('returns objects with a `shortName`', () => {
+it('returns objects with a `name`', () => {
 	const emojis = reduceEmojis(sampleEmojisTable)
 
-	expect(emojis[21].shortName).toBe('kissing face with smiling eyes')
+	expect(emojis[21].name).toBe('kissing face with smiling eyes')
 })
 
 it('returns objects with a `code`', () => {

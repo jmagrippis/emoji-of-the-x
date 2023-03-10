@@ -14,8 +14,9 @@ export const GET: RequestHandler = async ({fetch, url}) => {
 		(response) => response.text()
 	)
 
-	const emojiRows = reduceEmojis(html)
+	const emojis = reduceEmojis(html)
+	// TODO: Persist emojis that are not already in the DB
 
-	const randomEmoji = emojiRows[Math.floor(Math.random() * emojiRows.length)]
+	const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)]
 	return json(randomEmoji)
 }

@@ -8,7 +8,7 @@
 	<h2>
 		{data.emoji.character}
 	</h2>
-	<p class="text-4xl">{data.emoji.shortName}</p>
+	<p class="text-4xl">{data.emoji.name}</p>
 </section>
 
 <style lang="postcss">
