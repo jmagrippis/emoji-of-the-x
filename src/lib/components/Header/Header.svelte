@@ -1,15 +1,13 @@
 <script lang="ts">
 	import {browser} from '$app/environment'
 	import {applyAction, enhance} from '$app/forms'
-	import {getContext} from 'svelte'
-	import type {Writable} from 'svelte/store'
 
 	import YouTubeIcon from '$lib/icons/youtube.svg?component'
 	import ThemeToggleIcon from './ThemeToggleIcon.svelte'
 	import type {Theme} from '../../../hooks.server'
 	import {theme} from '$lib/stores/theme'
 
-	const deriveNextTheme = (theme: string): Theme => {
+	const deriveNextTheme = (theme: Theme): Theme => {
 		switch (theme) {
 			case 'dark':
 				return 'light'
@@ -26,7 +24,7 @@
 
 <header class="bg-surface-2">
 	<div class="container flex items-center justify-between px-2 py-4">
-		<h1 href="/">Emoji of the...</h1>
+		<h1><a href="/">Emoji of the...</a></h1>
 		<nav class="flex items-center gap-4">
 			<a
 				href="https://www.youtube.com/@jmagrippis"

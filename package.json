@@ -13,6 +13,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@fontsource/alef": "^4.5.9",
 		"@fontsource/noto-color-emoji": "^4.5.2",
 		"@playwright/test": "^1.31.1",
 		"@poppanator/sveltekit-svg": "^2.1.2",
@@ -24,6 +25,7 @@
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"happy-dom": "^8.9.0",
 		"postcss": "^8.4.21",
 		"prettier": "^2.8.4",
 		"prettier-plugin-svelte": "^2.8.1",
@@ -36,8 +38,5 @@
 		"vite": "^4.0.0",
 		"vitest": "^0.25.3"
 	},
-	"type": "module",
-	"dependencies": {
-		"@fontsource/alef": "^4.5.9"
-	}
+	"type": "module"
 }

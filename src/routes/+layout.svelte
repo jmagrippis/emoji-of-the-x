@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '@fontsource/alef/400.css'
 	import '@fontsource/alef/700.css'
-	import '@fontsource/noto-color-emoji'
+	import '@fontsource/noto-color-emoji/emoji.css'
 
 	import '../app.css'
 	import type {LayoutServerData} from './$types'
