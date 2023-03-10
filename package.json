@@ -40,9 +40,9 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": "18.x"
+		"node": "16.x"
 	},
 	"volta": {
-		"node": "18.15.0"
+		"node": "16.19.1"
 	}
 }
