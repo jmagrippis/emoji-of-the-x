@@ -1,9 +1,10 @@
 import type {LayoutServerLoad} from './$types'
 
 export const load: LayoutServerLoad = async ({locals}) => {
-	const {theme} = locals
+	const {getSession, theme} = locals
 
 	return {
+		session: getSession(),
 		theme,
 		defaultMeta: {
 			title: 'Emoji of the Day 👑',

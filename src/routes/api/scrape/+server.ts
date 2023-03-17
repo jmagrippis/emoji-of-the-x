@@ -1,8 +1,9 @@
-import {error, json} from '@sveltejs/kit'
+import {error} from '@sveltejs/kit'
 import {CRON_API_KEY} from '$env/static/private'
 
 import type {RequestHandler} from './$types'
 import {reduceEmojis} from './reduceEmojis'
+import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
 
 export const GET: RequestHandler = async ({fetch, url}) => {
 	const apiKey = url.searchParams.get('apiKey')
@@ -17,6 +18,14 @@ export const GET: RequestHandler = async ({fetch, url}) => {
 	const emojis = reduceEmojis(html)
 	// TODO: Persist emojis that are not already in the DB
 
+	const result = await supabaseServiceClient
+		.from('emojis')
+		.upsert(emojis, {count: 'exact', onConflict: 'code'})
+
+	if (result.error) {
+		throw error(400, result.error)
+	}
+
 	const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)]
-	return json(randomEmoji)
+	return new Response(`scraped ${result.count} emojis`)
 }
