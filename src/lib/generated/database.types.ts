@@ -28,6 +28,29 @@ export interface Database {
 	}
 	public: {
 		Tables: {
+			characters: {
+				Row: {
+					created_at: string | null
+					franchise: string
+					id: string
+					name: string
+					title: string
+				}
+				Insert: {
+					created_at?: string | null
+					franchise: string
+					id?: string
+					name: string
+					title: string
+				}
+				Update: {
+					created_at?: string | null
+					franchise?: string
+					id?: string
+					name?: string
+					title?: string
+				}
+			}
 			emojis: {
 				Row: {
 					character: string
@@ -49,6 +72,46 @@ export interface Database {
 					created_at?: string | null
 					hidden?: boolean
 					name?: string
+				}
+			}
+			picks: {
+				Row: {
+					created_at: string
+					emoji_code: string
+					id: string
+				}
+				Insert: {
+					created_at: string
+					emoji_code: string
+					id?: string
+				}
+				Update: {
+					created_at?: string
+					emoji_code?: string
+					id?: string
+				}
+			}
+			quotes: {
+				Row: {
+					character_id: string
+					content: string
+					created_at: string
+					id: string
+					pick_id: string
+				}
+				Insert: {
+					character_id: string
+					content: string
+					created_at?: string
+					id?: string
+					pick_id: string
+				}
+				Update: {
+					character_id?: string
+					content?: string
+					created_at?: string
+					id?: string
+					pick_id?: string
 				}
 			}
 		}
