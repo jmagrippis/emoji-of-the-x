@@ -26,6 +26,7 @@
 	<div class="container flex items-center justify-between px-2 py-4">
 		<h1><a href="/">Emoji of the...</a></h1>
 		<nav class="flex items-center gap-4">
+			<a href="/about">About</a>
 			<a
 				href="https://www.youtube.com/@jmagrippis"
 				target="_blank"
