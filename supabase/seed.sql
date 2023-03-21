@@ -15,3 +15,11 @@ VALUES
 ('Morgana', 'Phantom Thief of Hearts', 'Persona 5'),
 ('Scrooge McDuck', 'World’s richest duck', 'Disney'),
 ('Spider-Man', 'Amazing Superhero', 'Marvel');
+
+-- sample emojis to get started even without any scrapes
+INSERT INTO
+public.emojis (code, character, name)
+VALUES
+('U+1F600','😀','grinning face'),
+('U+1F603','😃','grinning face with big eyes'),
+('U+1F604','😄','grinning face with smiling eyes');
