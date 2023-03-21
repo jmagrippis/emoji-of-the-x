@@ -1,11 +1,14 @@
 <script lang="ts">
 	import {browser} from '$app/environment'
 	import {applyAction, enhance} from '$app/forms'
+	import {page} from '$app/stores'
 
-	import YouTubeIcon from '$lib/icons/youtube.svg?component'
 	import ThemeToggleIcon from './ThemeToggleIcon.svelte'
 	import type {Theme} from '../../../hooks.server'
+	import YouTubeIcon from '$lib/icons/youtube.svg?component'
 	import {theme} from '$lib/stores/theme'
+
+	$: logoTag = $page.url.pathname === '/' ? 'h1' : 'div'
 
 	const deriveNextTheme = (theme: Theme): Theme => {
 		switch (theme) {
@@ -24,7 +27,7 @@
 
 <header class="bg-surface-2">
 	<div class="container flex items-center justify-between px-2 py-4">
-		<h1><a href="/">Emoji of the...</a></h1>
+		<svelte:element this={logoTag}><a href="/">Emoji of the...</a></svelte:element>
 		<nav class="flex items-center gap-4">
 			<a href="/about">About</a>
 			<a
