@@ -119,7 +119,26 @@ export interface Database {
 			[_ in never]: never
 		}
 		Functions: {
-			[_ in never]: never
+			random_character: {
+				Args: Record<PropertyKey, never>
+				Returns: {
+					created_at: string | null
+					franchise: string
+					id: string
+					name: string
+					title: string
+				}[]
+			}
+			random_emoji: {
+				Args: Record<PropertyKey, never>
+				Returns: {
+					character: string
+					code: string
+					created_at: string | null
+					hidden: boolean
+					name: string
+				}[]
+			}
 		}
 		Enums: {
 			[_ in never]: never

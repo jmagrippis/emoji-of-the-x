@@ -24,19 +24,19 @@ export const GET: RequestHandler = async ({url}) => {
 	}
 
 	if (existingPickResult.data) {
-		return json({...existingPickResult.data, date: isoDate})
+		return json({...existingPickResult.data})
 	}
 
-	const allEmojisResult = await supabaseServiceClient
-		.from('emojis')
+	const randomEmojiResult = await supabaseServiceClient
+		.rpc('random_emoji')
 		.select('code, character')
-		.eq('hidden', false)
+		.single()
 
-	if (allEmojisResult.error) {
-		throw error(400, `Could not select emojis: ${allEmojisResult.error.message}`)
+	if (randomEmojiResult.error) {
+		throw error(400, `Could not select a random emoji: ${randomEmojiResult.error.message}`)
 	}
 
-	const randomEmoji = allEmojisResult.data[Math.floor(Math.random() * allEmojisResult.data.length)]
+	const randomEmoji = randomEmojiResult.data
 
 	const insertResult = await supabaseServiceClient
 		.from('picks')
@@ -51,17 +51,16 @@ export const GET: RequestHandler = async ({url}) => {
 		throw error(400, `Could not persist pick: ${insertResult.error?.message ?? 'no data'}`)
 	}
 
-	const characterResult = await supabaseServiceClient
-		.from('characters')
+	const randomCharacterResult = await supabaseServiceClient
+		.rpc('random_character')
 		.select('id, name, franchise')
-		.limit(1)
 		.single()
 
-	if (characterResult.error || !characterResult.data) {
-		throw error(400, `Could not select a random character: ${characterResult.error.message}`)
+	if (randomCharacterResult.error) {
+		throw error(400, `Could not select a random character: ${randomCharacterResult.error.message}`)
 	}
 
-	const character = characterResult.data
+	const character = randomCharacterResult.data
 
 	const response = await openai.createChatCompletion({
 		model: 'gpt-3.5-turbo',
@@ -83,7 +82,7 @@ export const GET: RequestHandler = async ({url}) => {
 			content:
 				firstResponseChoice && firstResponseChoice.message
 					? firstResponseChoice.message.content
-					: 'The best way to predict the future is to invent it.',
+					: `Of all the quotes about ${randomEmoji.character}, this is certainly one of them.`,
 		})
 		.maybeSingle()
 
