@@ -1,11 +1,11 @@
 {
 	"crons": [
 		{
-			"path": "/api/scrape?apiKey=1234",
+			"path": "/api/scrape?apiKey=${CRON_API_KEY}",
 			"schedule": "0 14 * * 2"
 		},
 		{
-			"path": "/api/pick?apiKey=1234",
+			"path": "/api/pick?apiKey=${CRON_API_KEY}",
 			"schedule": "0 0 * * *"
 		}
 	]

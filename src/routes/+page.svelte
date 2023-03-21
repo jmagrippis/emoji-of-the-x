@@ -6,9 +6,9 @@
 
 {#if data.emoji}
 	<section
-		class="container flex grow flex-col items-center justify-center gap-8 py-4 px-2 text-9xl lg:gap-12"
+		class="container flex grow flex-col items-center justify-center gap-8 py-4 px-2 text-9xl md:gap-12"
 	>
-		<h2 class="text-[65cqw] lg:text-[55cqw]">
+		<h2 class="text-[65cqw] lg:text-[55cqw] xl:text-[45cqw] 2xl:text-[40cqw]">
 			{data.emoji.character}
 		</h2>
 		<p class="text-4xl">{data.emoji.name}</p>

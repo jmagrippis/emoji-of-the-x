@@ -9,16 +9,18 @@ export const load: PageServerLoad = async ({locals}) => {
 	const emojiResult = await locals.supabase
 		.from('picks')
 		.select(
-			`id,
+			`
+			id,
 			created_at,
-	emojis(
-		code,
-		character,
-		name
-	)
+			emojis(
+				code,
+				character,
+				name
+			)
 	`
 		)
 		.limit(1)
+		.order('created_at', {ascending: false})
 		.single()
 
 	if (emojiResult.error) {

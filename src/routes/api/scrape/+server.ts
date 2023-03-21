@@ -16,7 +16,6 @@ export const GET: RequestHandler = async ({fetch, url}) => {
 	)
 
 	const emojis = reduceEmojis(html)
-	// TODO: Persist emojis that are not already in the DB
 
 	const result = await supabaseServiceClient
 		.from('emojis')
@@ -26,6 +25,5 @@ export const GET: RequestHandler = async ({fetch, url}) => {
 		throw error(400, result.error)
 	}
 
-	const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)]
 	return new Response(`scraped ${result.count} emojis`)
 }

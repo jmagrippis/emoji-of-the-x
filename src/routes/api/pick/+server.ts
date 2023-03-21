@@ -69,7 +69,7 @@ export const GET: RequestHandler = async ({url}) => {
 			{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
 			{
 				role: 'user',
-				content: `How would "${randomEmoji.character}" inspire you?`,
+				content: `The emoji of the day is "${randomEmoji.character}"! How does "${randomEmoji.character}" inspire you?`,
 			},
 		],
 	})
@@ -83,7 +83,7 @@ export const GET: RequestHandler = async ({url}) => {
 			content:
 				firstResponseChoice && firstResponseChoice.message
 					? firstResponseChoice.message.content
-					: `The best way to predict the future is to invent it.`,
+					: 'The best way to predict the future is to invent it.',
 		})
 		.maybeSingle()
 
