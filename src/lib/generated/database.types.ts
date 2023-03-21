@@ -96,22 +96,22 @@ export interface Database {
 					character_id: string
 					content: string
 					created_at: string
+					emoji_code: string
 					id: string
-					pick_id: string
 				}
 				Insert: {
 					character_id: string
 					content: string
 					created_at?: string
+					emoji_code: string
 					id?: string
-					pick_id: string
 				}
 				Update: {
 					character_id?: string
 					content?: string
 					created_at?: string
+					emoji_code?: string
 					id?: string
-					pick_id?: string
 				}
 			}
 		}

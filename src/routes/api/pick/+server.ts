@@ -1,7 +1,7 @@
 import {error, json} from '@sveltejs/kit'
-import {CRON_API_KEY} from '$env/static/private'
 
 import type {RequestHandler} from './$types'
+import {CRON_API_KEY} from '$env/static/private'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
 import {openai} from '$lib/server/openai'
 
@@ -24,7 +24,7 @@ export const GET: RequestHandler = async ({url}) => {
 	}
 
 	if (existingPickResult.data) {
-		return json({...existingPickResult.data})
+		return json(existingPickResult.data)
 	}
 
 	const randomEmojiResult = await supabaseServiceClient
@@ -45,7 +45,7 @@ export const GET: RequestHandler = async ({url}) => {
 			created_at: isoDate,
 		})
 		.select()
-		.maybeSingle()
+		.single()
 
 	if (insertResult.error || !insertResult.data) {
 		throw error(400, `Could not persist pick: ${insertResult.error?.message ?? 'no data'}`)
@@ -77,7 +77,7 @@ export const GET: RequestHandler = async ({url}) => {
 	const insertQuoteResult = await supabaseServiceClient
 		.from('quotes')
 		.insert({
-			pick_id: insertResult.data.id,
+			emoji_code: randomEmoji.code,
 			character_id: character.id,
 			content:
 				firstResponseChoice && firstResponseChoice.message
@@ -87,7 +87,7 @@ export const GET: RequestHandler = async ({url}) => {
 		.maybeSingle()
 
 	if (insertQuoteResult.error) {
-		throw error(400, `Could not persist pick: ${insertResult.error}`)
+		throw error(400, `Could not persist quote: ${insertQuoteResult.error}`)
 	}
 
 	return json(insertResult.data)

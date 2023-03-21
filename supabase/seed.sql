@@ -13,6 +13,5 @@ VALUES
 ('Tali', 'Technician, Squadmate', 'Mass Effect'),
 ('Joker', 'Clown Prince of Crime', 'Batman'),
 ('Morgana', 'Phantom Thief of Hearts', 'Persona 5'),
-('Scrooge McDuck', 'World’s richest duck', 'Disney')
-('Spider-Man', 'Amazing Superhero', 'Marvel')
-;
+('Scrooge McDuck', 'World’s richest duck', 'Disney'),
+('Spider-Man', 'Amazing Superhero', 'Marvel');

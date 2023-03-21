@@ -6,7 +6,7 @@ import {isValidTheme} from '../hooks.server'
 const TEN_YEARS_IN_SECONDS = 10 * 365 * 24 * 60 * 60
 
 export const load: PageServerLoad = async ({locals}) => {
-	const emojiResult = await locals.supabase
+	const pickResult = await locals.supabase
 		.from('picks')
 		.select(
 			`
@@ -15,7 +15,14 @@ export const load: PageServerLoad = async ({locals}) => {
 			emojis(
 				code,
 				character,
-				name
+				name,
+				quotes (
+					content,
+					characters (
+						name,
+						title
+					)
+				)
 			)
 	`
 		)
@@ -23,32 +30,20 @@ export const load: PageServerLoad = async ({locals}) => {
 		.order('created_at', {ascending: false})
 		.single()
 
-	if (emojiResult.error) {
-		return fail(500, {error: emojiResult.error.message})
+	if (pickResult.error) {
+		return fail(500, {error: pickResult.error.message})
 	}
-	const pick = emojiResult.data
+	const pick = pickResult.data
 	const emoji = Array.isArray(pick.emojis) ? pick.emojis[0] : pick.emojis
 	if (!emoji) {
 		return fail(500, {error: 'could not find emoji for current date'})
 	}
-
-	const quoteResult = await locals.supabase
-		.from('quotes')
-		.select(
-			`
-			content,
-			characters (
-				name,
-				title
-			)
-	`
-		)
-		.eq('pick_id', pick.id)
+	const quotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
 
 	return {
 		emoji,
 		quotes:
-			quoteResult.data?.map(({characters, ...quote}) => ({
+			quotes.map(({characters, ...quote}) => ({
 				...quote,
 				character: Array.isArray(characters) ? characters[0] : characters,
 			})) ?? [],
