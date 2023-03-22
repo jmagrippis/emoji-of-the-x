@@ -7,11 +7,11 @@
 	"recommendations": [
 		"bradlc.vscode-tailwindcss",
 		"codezombiech.gitignore",
-		"cschleiden.vscode-github-actions",
 		"csstools.postcss",
 		"dbaeumer.vscode-eslint",
 		"esbenp.prettier-vscode",
 		"GitHub.copilot",
+		"github.vscode-github-actions",
 		"mikestead.dotenv",
 		"ms-playwright.playwright",
 		"ms-vsliveshare.vsliveshare",
