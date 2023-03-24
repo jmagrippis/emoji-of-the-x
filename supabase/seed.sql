@@ -16,6 +16,15 @@ VALUES
 ('Scrooge McDuck', 'World’s richest duck', 'Disney'),
 ('Spider-Man', 'Amazing Superhero', 'Marvel');
 
+-- available content types to ask for advice on
+INSERT INTO
+public.content_types (id)
+VALUES
+('photo'),
+('TikTok'),
+('film'),
+('video game');
+
 -- sample emojis to get started even without any scrapes
 INSERT INTO
 public.emojis (code, character, name)
