@@ -7,6 +7,7 @@ on:
 env:
   PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
   PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+  SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 jobs:
   test:
     timeout-minutes: 60
