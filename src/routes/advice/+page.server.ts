@@ -1,8 +1,8 @@
 import {error, fail} from '@sveltejs/kit'
 
-import {openai} from '$lib/server/openai'
 import type {Actions, PageServerLoad} from './$types'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
+import {createChatCompletion} from '$lib/server/openaiClient'
 
 export const load = (async ({locals}) => {
 	const [charactersResult, emojiResult, contentTypesResult] = await Promise.all([
@@ -112,19 +112,13 @@ export const actions = {
 			}
 		}
 
-		const response = await openai.createChatCompletion({
-			model: 'gpt-3.5-turbo',
-			messages: [
-				{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
-				{
-					role: 'user',
-					content: `The emoji of the day is ‘${emoji.character}’! How you would you make a ${contentType} with a theme of ‘${emoji.character}’"?`,
-				},
-			],
-		})
-
-		const firstResponseChoice = response.data?.choices?.[0]
-		const answer = firstResponseChoice.message?.content
+		const answer = await createChatCompletion([
+			{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
+			{
+				role: 'user',
+				content: `The emoji of the day is ‘${emoji.character}’! How you would you make a ${contentType} with a theme of ‘${emoji.character}’"?`,
+			},
+		])
 
 		if (!answer) {
 			return fail(500, {emojiCode, error: `Could not get ${character.name} to speak!`})
@@ -140,7 +134,7 @@ export const actions = {
 		return {
 			success: true,
 			question: shortQuestion,
-			answer: answer,
+			answer,
 		}
 	},
 } satisfies Actions
