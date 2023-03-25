@@ -28,6 +28,32 @@ export interface Database {
 	}
 	public: {
 		Tables: {
+			advice: {
+				Row: {
+					character_id: string
+					content: string
+					created_at: string | null
+					emoji_code: string
+					id: string
+					type: string
+				}
+				Insert: {
+					character_id: string
+					content: string
+					created_at?: string | null
+					emoji_code: string
+					id?: string
+					type: string
+				}
+				Update: {
+					character_id?: string
+					content?: string
+					created_at?: string | null
+					emoji_code?: string
+					id?: string
+					type?: string
+				}
+			}
 			characters: {
 				Row: {
 					created_at: string | null
@@ -49,6 +75,20 @@ export interface Database {
 					id?: string
 					name?: string
 					title?: string
+				}
+			}
+			content_types: {
+				Row: {
+					created_at: string | null
+					id: string
+				}
+				Insert: {
+					created_at?: string | null
+					id: string
+				}
+				Update: {
+					created_at?: string | null
+					id?: string
 				}
 			}
 			emojis: {

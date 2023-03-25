@@ -3,7 +3,7 @@ import {error, json} from '@sveltejs/kit'
 import type {RequestHandler} from './$types'
 import {CRON_API_KEY} from '$env/static/private'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
-import {openai} from '$lib/server/openai'
+import {createChatCompletion} from '$lib/server/openaiClient'
 
 export const GET: RequestHandler = async ({url}) => {
 	const apiKey = url.searchParams.get('apiKey')
@@ -62,17 +62,13 @@ export const GET: RequestHandler = async ({url}) => {
 
 	const character = randomCharacterResult.data
 
-	const response = await openai.createChatCompletion({
-		model: 'gpt-3.5-turbo',
-		messages: [
-			{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
-			{
-				role: 'user',
-				content: `The emoji of the day is "${randomEmoji.character}"! How does "${randomEmoji.character}" inspire you?`,
-			},
-		],
-	})
-	const firstResponseChoice = response.data?.choices?.[0]
+	const quote = await createChatCompletion([
+		{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
+		{
+			role: 'user',
+			content: `The emoji of the day is "${randomEmoji.character}"! How does "${randomEmoji.character}" inspire you?`,
+		},
+	])
 
 	const insertQuoteResult = await supabaseServiceClient
 		.from('quotes')
@@ -80,9 +76,7 @@ export const GET: RequestHandler = async ({url}) => {
 			emoji_code: randomEmoji.code,
 			character_id: character.id,
 			content:
-				firstResponseChoice && firstResponseChoice.message
-					? firstResponseChoice.message.content
-					: `Of all the quotes about ${randomEmoji.character}, this is certainly one of them.`,
+				quote ?? `Of all the quotes about ${randomEmoji.character}, this is certainly one of them.`,
 		})
 		.maybeSingle()
 

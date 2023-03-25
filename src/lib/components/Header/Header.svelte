@@ -29,6 +29,7 @@
 	<div class="container flex items-center justify-between px-2 py-4">
 		<svelte:element this={logoTag}><a href="/">Emoji of the...</a></svelte:element>
 		<nav class="flex items-center gap-4">
+			<a href="/advice">Advice</a>
 			<a href="/about">About</a>
 			<a
 				href="https://www.youtube.com/@jmagrippis"
