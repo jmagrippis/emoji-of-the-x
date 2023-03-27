@@ -64,7 +64,7 @@ export const actions = {
 		) {
 			return fail(400, {
 				error:
-					'You need to provide all the emoji of the day, a character and the type of content you want their advice on',
+					'You need to provide all of the emoji of the day, a character, and the type of content you want their advice on',
 			})
 		}
 
@@ -102,7 +102,7 @@ export const actions = {
 		const character = characterResult.data
 		const emoji = emojiResult.data
 
-		const shortQuestion = `${character.name}, how you would you make a ${contentType} with a theme of "${emoji.character}?`
+		const shortQuestion = `${character.name}, how you would you make a ${contentType} with a theme of ‘${emoji.character}’?`
 
 		if (adviceResult.data) {
 			return {
@@ -113,7 +113,10 @@ export const actions = {
 		}
 
 		const answer = await createChatCompletion([
-			{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
+			{
+				role: 'system',
+				content: `You are ${character.name} from ${character.franchise}. Please only respond as ${character.name}`,
+			},
 			{
 				role: 'user',
 				content: `The emoji of the day is ‘${emoji.character}’! How you would you make a ${contentType} with a theme of ‘${emoji.character}’"?`,

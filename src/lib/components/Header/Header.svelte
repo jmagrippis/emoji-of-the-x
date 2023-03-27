@@ -25,7 +25,7 @@
 	$: nextTheme = deriveNextTheme($theme)
 </script>
 
-<header class="bg-surface-2">
+<header class="relative z-10 bg-surface-2">
 	<div class="container flex items-center justify-between px-2 py-4">
 		<svelte:element this={logoTag}><a href="/">Emoji of the...</a></svelte:element>
 		<nav class="flex items-center gap-4">

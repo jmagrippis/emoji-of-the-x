@@ -63,7 +63,10 @@ export const GET: RequestHandler = async ({url}) => {
 	const character = randomCharacterResult.data
 
 	const quote = await createChatCompletion([
-		{role: 'system', content: `You are ${character.name} from ${character.franchise}.`},
+		{
+			role: 'system',
+			content: `You are ${character.name} from ${character.franchise}. Please only respond as ${character.name}`,
+		},
 		{
 			role: 'user',
 			content: `The emoji of the day is "${randomEmoji.character}"! How does "${randomEmoji.character}" inspire you?`,
