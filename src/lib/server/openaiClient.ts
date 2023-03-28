@@ -13,7 +13,7 @@ export const createChatCompletion = async (messages: OpenAIMessage[]): Promise<s
 			Authorization: `Bearer ${OPEN_AI_API_KEY}`,
 		}),
 		body: JSON.stringify({
-			model: 'gpt-3.5-turbo',
+			model: 'gpt-4',
 			messages,
 		}),
 	})
