@@ -19,6 +19,7 @@ Johnny often livestreams development over at [YouTube](https://www.youtube.com/@
 
 - [🔴 LIVESTREAM: Initial project setup & scraping with Happy DOM](https://www.youtube.com/watch?v=dc5rRLHNPbg)
 - [🔴 LIVESTREAM: Setting up ChatGPT 3.5 Turbo 🤖 Generative AI with OpenAI & Supabase](https://www.youtube.com/watch?v=9-U5SByu9e4)
+- [🔴 LIVESTREAM: Cached ChatGPT in response to user interactions 👩‍💻 with SvelteKit Forms & Supabase](https://www.youtube.com/watch?v=-hmYEcUaKUw)
 
 ## Running locally
 
