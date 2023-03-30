@@ -11,7 +11,7 @@
 	<div class="mb-2">{label}</div>
 	<select
 		name="character_id"
-		class="w-full rounded-md bg-surface-2 py-2 px-4 ring-inset focus:border-transparent focus:ring-2 focus:ring-emphasis-hover"
+		class="w-full rounded-md bg-surface-2 px-4 py-2 ring-inset focus:border-transparent focus:ring-2 focus:ring-emphasis-hover"
 		required
 	>
 		{#each characters as character}

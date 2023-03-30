@@ -12,12 +12,12 @@
 	let formState: 'idle' | 'loading' | 'success' | 'error' = 'idle'
 </script>
 
-<section class="container grow py-4 px-2 text-xl lg:text-2xl">
+<section class="container grow px-2 py-4 text-xl lg:text-2xl">
 	<h1 class="mb-4 text-4xl">Content Creation Advice</h1>
 	{#if form?.question && form?.answer}
 		<div class="mb-4 flex flex-col gap-4">
-			<p class="rounded bg-surface-2 py-4 px-4">{form.question}</p>
-			<p class="rounded bg-surface-2 py-4 px-4">{form.answer}</p>
+			<p class="rounded bg-surface-2 px-4 py-4">{form.question}</p>
+			<p class="rounded bg-surface-2 px-4 py-4">{form.answer}</p>
 		</div>
 	{/if}
 	<form

@@ -11,7 +11,7 @@
 	let formState: 'idle' | 'loading' | 'success' | 'error' = 'idle'
 </script>
 
-<div class="container flex grow flex-col gap-8 py-8 px-2">
+<div class="container flex grow flex-col gap-8 px-2 py-8">
 	{#if data.emoji}
 		<PickedEmoji
 			emoji={data.emoji}
