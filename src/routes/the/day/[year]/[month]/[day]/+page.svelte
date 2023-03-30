@@ -1,0 +1,19 @@
+<script lang="ts">
+	import PickedEmoji from '$lib/components/PickedEmoji.svelte'
+	import type {PageData} from './$types'
+
+	export let data: PageData
+</script>
+
+<div class="container flex grow flex-col gap-8 py-8 px-2">
+	{#if data.emoji}
+		<PickedEmoji
+			emoji={data.emoji}
+			quotes={data.quotes}
+			previousPick={data.previousPick}
+			nextPick={data.nextPick}
+		/>
+	{:else}
+		<section>We somehow could not find an emoji for this date...</section>
+	{/if}
+</div>
