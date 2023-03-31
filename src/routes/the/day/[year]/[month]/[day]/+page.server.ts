@@ -74,6 +74,10 @@ export const load = (async ({locals, params}) => {
 				character: Array.isArray(characters) ? characters[0] : characters,
 			})) ?? [],
 		previousPick: previousPickResult.data ? getRelativeAnchor(new Date(previousPickDate)) : null,
-		nextPick: nextPickResult.data ? getRelativeAnchor(new Date(nextPickDate)) : null,
+		nextPick: nextPickResult.data
+			? getIsoDate(new Date()) === nextPickDate
+				? '/'
+				: getRelativeAnchor(new Date(nextPickDate))
+			: null,
 	}
 }) satisfies PageServerLoad

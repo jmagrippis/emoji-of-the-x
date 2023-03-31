@@ -13,6 +13,9 @@
 			previousPick={data.previousPick}
 			nextPick={data.nextPick}
 		/>
+		<p>
+			You may ask other characters for a quote, but only about the <a href="/">Emoji of the Day</a>!
+		</p>
 	{:else}
 		<section>We somehow could not find an emoji for this date...</section>
 	{/if}
