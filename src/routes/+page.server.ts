@@ -4,10 +4,11 @@ import type {PageServerLoad} from './$types'
 import {isValidTheme} from '../hooks.server'
 import {createChatCompletion} from '$lib/server/openaiClient'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
+import {getRelativeAnchor} from '$lib/getRelativeAnchor'
 
 const TEN_YEARS_IN_SECONDS = 10 * 365 * 24 * 60 * 60
 
-export const load: PageServerLoad = async ({locals}) => {
+export const load = (async ({locals}) => {
 	const pickResult = await locals.supabase
 		.from('picks')
 		.select(
@@ -60,6 +61,10 @@ export const load: PageServerLoad = async ({locals}) => {
 		.select('id, name, title')
 		.not('id', 'in', `(${Object.keys(quotedCharacterIds).join(',')})})`)
 
+	const previousPickDateObject = new Date(pick.created_at)
+	previousPickDateObject.setDate(previousPickDateObject.getDate() - 1)
+	const previousPick = getRelativeAnchor(previousPickDateObject)
+
 	return {
 		emoji,
 		quotes:
@@ -68,10 +73,11 @@ export const load: PageServerLoad = async ({locals}) => {
 				character: Array.isArray(characters) ? characters[0] : characters,
 			})) ?? [],
 		remainingCharacters: charactersResult.data,
+		previousPick,
 	}
-}
+}) satisfies PageServerLoad
 
-export const actions: Actions = {
+export const actions = {
 	quote: async ({request, locals}) => {
 		const data = await request.formData()
 		const emojiCode = data.get('emoji_code')
@@ -169,4 +175,4 @@ export const actions: Actions = {
 
 		return {theme}
 	},
-}
+} satisfies Actions

@@ -4,6 +4,7 @@ import type {RequestHandler} from './$types'
 import {CRON_API_KEY} from '$env/static/private'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
 import {createChatCompletion} from '$lib/server/openaiClient'
+import {getIsoDate} from '$lib/getIsoDate'
 
 export const GET: RequestHandler = async ({url}) => {
 	const apiKey = url.searchParams.get('apiKey')
@@ -12,7 +13,7 @@ export const GET: RequestHandler = async ({url}) => {
 		throw error(400, 'Invalid API key')
 	}
 
-	const [isoDate] = new Date().toISOString().split('T')
+	const isoDate = getIsoDate(new Date())
 	const existingPickResult = await supabaseServiceClient
 		.from('picks')
 		.select()

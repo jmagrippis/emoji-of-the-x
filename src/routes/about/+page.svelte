@@ -1,4 +1,4 @@
-<section class="container grow py-4 px-2">
+<section class="container grow px-2 py-4">
 	<h1 class="mb-4 text-4xl">About</h1>
 	<div class="flex max-w-prose flex-col gap-2 text-xl lg:gap-4 lg:text-2xl">
 		<p>

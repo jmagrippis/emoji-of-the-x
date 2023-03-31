@@ -2,6 +2,7 @@
 	import {enhance} from '$app/forms'
 	import BigButton from '$lib/components/BigButton.svelte'
 	import CharacterSelect from '$lib/components/CharacterSelect.svelte'
+	import PickedEmoji from '$lib/components/PickedEmoji.svelte'
 	import Spinner from '$lib/components/Spinner.svelte'
 	import type {PageData} from './$types'
 
@@ -10,32 +11,15 @@
 	let formState: 'idle' | 'loading' | 'success' | 'error' = 'idle'
 </script>
 
-<div class="container flex grow flex-col gap-8 py-8 px-2">
+<div class="container flex grow flex-col gap-8 px-2 py-8">
 	{#if data.emoji}
-		<section class="flex grow flex-col items-center justify-center gap-8 text-9xl md:gap-12">
-			<h2 class="text-[65cqw] lg:text-[55cqw] xl:text-[45cqw] 2xl:text-[40cqw]">
-				{data.emoji.character}
-			</h2>
-			<p class="text-4xl">{data.emoji.name}</p>
-			{#each data.quotes as quote}
-				<figure class="flex flex-col gap-4">
-					<blockquote class="text-xl leading-8 lg:text-2xl lg:leading-10">
-						<p>
-							{quote.content}
-						</p>
-					</blockquote>
-					<figcaption class="flex gap-2 text-base">
-						<div>-</div>
-						{#if quote.character}
-							<div>{quote.character.name}</div>
-							<div class="text-copy-muted">({quote.character.title})</div>
-						{:else}
-							<div>unknown</div>
-						{/if}
-					</figcaption>
-				</figure>
-			{/each}
-		</section>
+		<PickedEmoji
+			emoji={data.emoji}
+			quotes={data.quotes}
+			previousPick={data.previousPick}
+			nextPick={null}
+		/>
+
 		{#if data.remainingCharacters}
 			<section class="text-xl">
 				<h2 class="mb-2 text-2xl">Ask another character about {data.emoji.character}!</h2>
@@ -68,9 +52,3 @@
 		<section>No emoji for today! Please try again shortly!</section>
 	{/if}
 </div>
-
-<style lang="postcss">
-	section {
-		container-type: inline-size;
-	}
-</style>
