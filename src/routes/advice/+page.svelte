@@ -16,8 +16,14 @@
 	<h1 class="mb-4 text-4xl">Content Creation Advice</h1>
 	{#if form?.question && form?.answer}
 		<div class="mb-4 flex flex-col gap-4">
-			<p class="rounded bg-surface-2 px-4 py-4">{form.question}</p>
-			<p class="rounded bg-surface-2 px-4 py-4">{form.answer}</p>
+			<p class="self-end rounded bg-surface-3 px-4 py-4">{form.question}</p>
+			<p class="max-w-prose self-start rounded bg-surface-2 px-4 py-4">{form.answer}</p>
+			{#if form?.art}
+				<img src={form.art.src} alt={form.art.title} class="shadow self-start rounded" />
+				<p class="max-w-prose self-start rounded bg-surface-2 px-4 py-4">
+					👆 This sketch should help 🤞
+				</p>
+			{/if}
 		</div>
 	{/if}
 	<form

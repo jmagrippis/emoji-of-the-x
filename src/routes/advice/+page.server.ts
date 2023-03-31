@@ -2,7 +2,9 @@ import {error, fail} from '@sveltejs/kit'
 
 import type {Actions, PageServerLoad} from './$types'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
-import {createChatCompletion} from '$lib/server/openaiClient'
+import {createChatCompletion, generateImage} from '$lib/server/openaiClient'
+
+const ONE_WEEK_IN_SECONDS = 60 * 60 * 24 * 7
 
 export const load = (async ({locals}) => {
 	const [charactersResult, emojiResult, contentTypesResult] = await Promise.all([
@@ -50,6 +52,8 @@ export const load = (async ({locals}) => {
 	}
 }) satisfies PageServerLoad
 
+const getArtRelativePath = (id: string) => `art/${id}.png`
+
 export const actions = {
 	default: async ({request, locals}) => {
 		const data = await request.formData()
@@ -71,7 +75,7 @@ export const actions = {
 		const [adviceResult, characterResult, emojiResult, contentTypeResult] = await Promise.all([
 			locals.supabase
 				.from('advice')
-				.select('content')
+				.select('id, content, art_prompt')
 				.eq('emoji_code', emojiCode)
 				.eq('character_id', characterId)
 				.eq('type', contentType)
@@ -104,40 +108,84 @@ export const actions = {
 
 		const shortQuestion = `${character.name}, how you would you make a ${contentType} with a theme of ‘${emoji.character}’?`
 
+		let art: {src: string; title: string} | null = null
+
 		if (adviceResult.data) {
+			if (adviceResult.data.art_prompt) {
+				const {data} = locals.supabase.storage
+					.from('advice')
+					.getPublicUrl(getArtRelativePath(adviceResult.data.id))
+				art = {
+					src: data.publicUrl,
+					title: adviceResult.data.art_prompt,
+				}
+			}
+
 			return {
 				success: true,
 				question: shortQuestion,
 				answer: adviceResult.data.content,
+				art,
 			}
 		}
-
-		const answer = await createChatCompletion([
-			{
-				role: 'system',
-				content: `You are ${character.name} from ${character.franchise}. Please only respond as ${character.name}`,
-			},
-			{
-				role: 'user',
-				content: `The emoji of the day is ‘${emoji.character}’! How you would you make a ${contentType} with a theme of ‘${emoji.character}’"?`,
-			},
+		const artPrompt = `Sketch by ${character.name} from ${character.franchise} for a ${contentType} with a theme of ‘${emoji.character}’`
+		const [answer, generatedImageUrl] = await Promise.all([
+			createChatCompletion([
+				{
+					role: 'system',
+					content: `You are ${character.name} from ${character.franchise}. Please only respond as ${character.name}`,
+				},
+				{
+					role: 'user',
+					content: `The emoji of the day is ‘${emoji.character}’! How you would you make a ${contentType} with a theme of ‘${emoji.character}’"?`,
+				},
+			]),
+			generateImage(artPrompt),
 		])
 
 		if (!answer) {
 			return fail(500, {emojiCode, error: `Could not get ${character.name} to speak!`})
 		}
 
-		await supabaseServiceClient.from('advice').insert({
-			emoji_code: emojiCode,
-			character_id: characterId,
-			type: contentType,
-			content: answer,
-		})
+		const insertAdviceResult = await supabaseServiceClient
+			.from('advice')
+			.insert({
+				emoji_code: emojiCode,
+				character_id: characterId,
+				type: contentType,
+				content: answer,
+				art_prompt: artPrompt,
+			})
+			.select('id')
+			.single()
+
+		if (generatedImageUrl && !insertAdviceResult.error) {
+			const imageResponse = await fetch(generatedImageUrl)
+			const blob = await imageResponse.blob()
+			const path = getArtRelativePath(insertAdviceResult.data.id)
+			const uploadImageResult = await supabaseServiceClient.storage
+				.from('advice')
+				.upload(path, blob, {
+					cacheControl: `${ONE_WEEK_IN_SECONDS}`,
+				})
+
+			const {
+				data: {publicUrl: src},
+			} = locals.supabase.storage.from('advice').getPublicUrl(path)
+
+			if (!uploadImageResult.error) {
+				art = {
+					src,
+					title: artPrompt,
+				}
+			}
+		}
 
 		return {
 			success: true,
 			question: shortQuestion,
 			answer,
+			art,
 		}
 	},
 } satisfies Actions

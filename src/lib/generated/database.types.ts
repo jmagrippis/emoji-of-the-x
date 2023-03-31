@@ -30,6 +30,7 @@ export interface Database {
 		Tables: {
 			advice: {
 				Row: {
+					art_prompt: string | null
 					character_id: string
 					content: string
 					created_at: string | null
@@ -38,6 +39,7 @@ export interface Database {
 					type: string
 				}
 				Insert: {
+					art_prompt?: string | null
 					character_id: string
 					content: string
 					created_at?: string | null
@@ -46,6 +48,7 @@ export interface Database {
 					type: string
 				}
 				Update: {
+					art_prompt?: string | null
 					character_id?: string
 					content?: string
 					created_at?: string | null

@@ -51,3 +51,30 @@ export const createChatCompletion = async (messages: OpenAIMessage[]): Promise<s
 
 	return isChatCompletion(json) ? json.choices[0].message.content : null
 }
+
+type OpenAIImageGeneration = {
+	created: number
+	data: {url: string}[]
+}
+
+const isImageGeneration = (json: unknown): json is OpenAIImageGeneration =>
+	typeof json === 'object' && !!(json as OpenAIImageGeneration).data[0]?.url
+
+export const generateImage = async (prompt: string): Promise<string | null> => {
+	const response = await fetch('https://api.openai.com/v1/images/generations', {
+		method: 'POST',
+		headers: new Headers({
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${OPEN_AI_API_KEY}`,
+		}),
+		body: JSON.stringify({prompt}),
+	})
+
+	if (!response.ok) {
+		throw new Error(`Error connecting to OpenAI: ${response.status} ${response.statusText}`)
+	}
+
+	const json = await response.json()
+
+	return isImageGeneration(json) ? json.data[0].url : null
+}
