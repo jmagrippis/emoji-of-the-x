@@ -70,7 +70,7 @@ export const GET: RequestHandler = async ({url}) => {
 		},
 		{
 			role: 'user',
-			content: `The emoji of the day is "${randomEmoji.character}"! How does "${randomEmoji.character}" inspire you?`,
+			content: `The emoji of the day is ‘${randomEmoji.character}’! How does ‘${randomEmoji.character}’ inspire you?`,
 		},
 	])
 

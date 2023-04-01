@@ -135,7 +135,7 @@ export const actions = {
 			},
 			{
 				role: 'user',
-				content: `The emoji of the day is "${emoji.character}"! How does "${emoji.character}" inspire you?`,
+				content: `The emoji of the day is ‘${emoji.character}’! How does ‘${emoji.character}’ inspire you?`,
 			},
 		])
 

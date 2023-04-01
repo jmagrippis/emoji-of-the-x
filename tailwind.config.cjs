@@ -15,6 +15,7 @@ module.exports = {
 			surface: {
 				1: withAlphaValue('surface-1-color'),
 				2: withAlphaValue('surface-2-color'),
+				3: withAlphaValue('surface-3-color'),
 			},
 			emphasis: {
 				DEFAULT: withAlphaValue('emphasis-color'),
