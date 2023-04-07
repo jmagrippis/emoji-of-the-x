@@ -5,7 +5,7 @@ import {getRelativeAnchor} from '$lib/getRelativeAnchor'
 
 import type {PageServerLoad} from './$types'
 
-export const load = (async ({locals, params}) => {
+export const load = (async ({locals, params, url}) => {
 	const {year, month, day} = params
 	const date = `${year}/${month}/${day}`
 	const pickResult = await locals.supabase
@@ -72,6 +72,11 @@ export const load = (async ({locals, params}) => {
 			.maybeSingle(),
 	])
 
+	const imageUrlTitle = `The emoji of ${date} is ‘${emoji.name}’!`
+	const ogImageUrlObject = new URL(`${url.origin}/api/og`)
+	ogImageUrlObject.searchParams.set('emoji', emoji.character)
+	ogImageUrlObject.searchParams.set('copy', imageUrlTitle)
+
 	return {
 		emoji,
 		quotes,
@@ -86,6 +91,10 @@ export const load = (async ({locals, params}) => {
 			description: `The official emoji of ${date} was ${emoji.character}! And we asked ${
 				quotes[0].character?.name ?? 'famous fictional characters'
 			} for a quote... Read on to find out ${emoji.character}`,
+			image: {
+				url: ogImageUrlObject.href,
+				alt: imageUrlTitle,
+			},
 		},
 	}
 }) satisfies PageServerLoad

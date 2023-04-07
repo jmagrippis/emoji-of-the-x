@@ -69,9 +69,11 @@ export const load = (async ({locals, url}) => {
 		...quote,
 		character: Array.isArray(characters) ? characters[0] : characters,
 	}))
+
+	const imageUrlTitle = `The emoji of the day is ‘${emoji.name}’!`
 	const ogImageUrlObject = new URL(`${url.origin}/api/og`)
 	ogImageUrlObject.searchParams.set('emoji', emoji.character)
-	ogImageUrlObject.searchParams.set('copy', `The emoji of the day is ‘${emoji.name}’!`)
+	ogImageUrlObject.searchParams.set('copy', imageUrlTitle)
 
 	return {
 		emoji,
@@ -85,7 +87,7 @@ export const load = (async ({locals, url}) => {
 			} for a quote... Read on to find out ${emoji.character}`,
 			image: {
 				url: ogImageUrlObject.href,
-				alt: `The emoji of the day is ${emoji.character}`,
+				alt: imageUrlTitle,
 			},
 		},
 	}
