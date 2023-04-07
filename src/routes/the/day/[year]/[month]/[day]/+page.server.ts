@@ -44,8 +44,11 @@ export const load = (async ({locals, params}) => {
 		throw error(404, {message: `could not find emoji for ${date}`})
 	}
 
-	const quotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
-
+	const dbQuotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
+	const quotes = dbQuotes.map(({characters, ...quote}) => ({
+		...quote,
+		character: Array.isArray(characters) ? characters[0] : characters,
+	}))
 	const previousPickDateObject = new Date(pick.created_at)
 	previousPickDateObject.setDate(previousPickDateObject.getDate() - 1)
 	const previousPickDate = getIsoDate(previousPickDateObject)
@@ -71,16 +74,18 @@ export const load = (async ({locals, params}) => {
 
 	return {
 		emoji,
-		quotes:
-			quotes.map(({characters, ...quote}) => ({
-				...quote,
-				character: Array.isArray(characters) ? characters[0] : characters,
-			})) ?? [],
+		quotes,
 		previousPick: previousPickResult.data ? getRelativeAnchor(new Date(previousPickDate)) : null,
 		nextPick: nextPickResult.data
 			? getIsoDate(new Date()) === nextPickDate
 				? '/'
 				: getRelativeAnchor(new Date(nextPickDate))
 			: null,
+		meta: {
+			title: `${emoji.character} is the emoji of ${date}!`,
+			description: `The official emoji of ${date} was ${emoji.character}! And we asked ${
+				quotes[0].character?.name ?? 'famous fictional characters'
+			} for a quote... Read on to find out ${emoji.character}`,
+		},
 	}
 }) satisfies PageServerLoad

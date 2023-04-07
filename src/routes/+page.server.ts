@@ -8,7 +8,7 @@ import {getRelativeAnchor} from '$lib/getRelativeAnchor'
 
 const TEN_YEARS_IN_SECONDS = 10 * 365 * 24 * 60 * 60
 
-export const load = (async ({locals}) => {
+export const load = (async ({locals, url}) => {
 	const pickResult = await locals.supabase
 		.from('picks')
 		.select(
@@ -42,9 +42,9 @@ export const load = (async ({locals}) => {
 	if (!pick || !emoji) {
 		throw error(404, {message: 'could not find an emoji for today!'})
 	}
-	const quotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
+	const dbQuotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
 
-	const quotedCharacterIds = quotes.reduce<Record<string, string>>((acc, {characters}) => {
+	const quotedCharacterIds = dbQuotes.reduce<Record<string, string>>((acc, {characters}) => {
 		if (!characters) return acc
 		if (Array.isArray(characters)) {
 			characters.forEach(({id}) => {
@@ -65,15 +65,26 @@ export const load = (async ({locals}) => {
 	previousPickDateObject.setDate(previousPickDateObject.getDate() - 1)
 	const previousPick = getRelativeAnchor(previousPickDateObject)
 
+	const quotes = dbQuotes.map(({characters, ...quote}) => ({
+		...quote,
+		character: Array.isArray(characters) ? characters[0] : characters,
+	}))
+	const ogImageUrl = `${url.origin}/api/og?code=${encodeURIComponent(emoji.code)}`
 	return {
 		emoji,
-		quotes:
-			quotes.map(({characters, ...quote}) => ({
-				...quote,
-				character: Array.isArray(characters) ? characters[0] : characters,
-			})) ?? [],
+		quotes,
 		remainingCharacters: charactersResult.data,
 		previousPick,
+		meta: {
+			title: `${emoji.character} is the emoji of today!`,
+			description: `The official emoji of the day is ${emoji.character}! And we asked ${
+				quotes[0].character?.name ?? 'famous fictional characters'
+			} for a quote... Read on to find out ${emoji.character}`,
+			image: {
+				url: ogImageUrl,
+				alt: `The emoji of the day is ${emoji.character}`,
+			}
+		},
 	}
 }) satisfies PageServerLoad
 
