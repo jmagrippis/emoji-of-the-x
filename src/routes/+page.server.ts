@@ -69,7 +69,10 @@ export const load = (async ({locals, url}) => {
 		...quote,
 		character: Array.isArray(characters) ? characters[0] : characters,
 	}))
-	const ogImageUrl = `${url.origin}/api/og?code=${encodeURIComponent(emoji.code)}`
+	const ogImageUrlObject = new URL(`${url.origin}/api/og`)
+	ogImageUrlObject.searchParams.set('emoji', emoji.character)
+	ogImageUrlObject.searchParams.set('copy', `The emoji of the day is ‘${emoji.name}’!`)
+
 	return {
 		emoji,
 		quotes,
@@ -81,9 +84,9 @@ export const load = (async ({locals, url}) => {
 				quotes[0].character?.name ?? 'famous fictional characters'
 			} for a quote... Read on to find out ${emoji.character}`,
 			image: {
-				url: ogImageUrl,
+				url: ogImageUrlObject.href,
 				alt: `The emoji of the day is ${emoji.character}`,
-			}
+			},
 		},
 	}
 }) satisfies PageServerLoad

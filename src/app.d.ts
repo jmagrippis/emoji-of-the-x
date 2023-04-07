@@ -15,11 +15,11 @@ declare global {
 		interface PageData {
 			theme: Theme
 			defaultMeta: {
-				title: string,
-				description: string,
+				title: string
+				description: string
 				image: {
-					url: string,
-					alt: string,
+					url: string
+					alt: string
 				}
 			}
 		}

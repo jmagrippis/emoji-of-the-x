@@ -1,9 +1,9 @@
 import type {LayoutServerLoad} from './$types'
 
-export const load: LayoutServerLoad = async ({locals,url}) => {
+export const load: LayoutServerLoad = async ({locals, url}) => {
 	const {getSession, theme} = locals
 
-	const ogImageUrl = `${url.origin}/api/og?code=${encodeURIComponent('U+1F451')}`
+	const ogImageUrl = `${url.origin}/api/og`
 
 	return {
 		session: getSession(),
@@ -13,8 +13,8 @@ export const load: LayoutServerLoad = async ({locals,url}) => {
 			description: 'The first app to decide the emoji of the Day / Week / Month / Year 👑',
 			image: {
 				url: ogImageUrl,
-				alt: 'The official app to pick the emoji of the day!'
-			}
+				alt: 'The official app to pick the emoji of the day',
+			},
 		},
 	}
 }
