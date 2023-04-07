@@ -1,4 +1,4 @@
-import {fail} from '@sveltejs/kit'
+import {error} from '@sveltejs/kit'
 
 import {getIsoDate} from '$lib/getIsoDate'
 import {getRelativeAnchor} from '$lib/getRelativeAnchor'
@@ -31,16 +31,19 @@ export const load = (async ({locals, params}) => {
 		)
 		.limit(1)
 		.eq('created_at', date)
-		.single()
+		.maybeSingle()
 
 	if (pickResult.error) {
-		return fail(500, {error: pickResult.error.message})
+		throw pickResult.error
 	}
+
 	const pick = pickResult.data
-	const emoji = Array.isArray(pick.emojis) ? pick.emojis[0] : pick.emojis
-	if (!emoji) {
-		return fail(500, {error: `could not find emoji for ${date}`})
+	const emoji = Array.isArray(pick?.emojis) ? pick?.emojis[0] : pick?.emojis
+
+	if (!pick || !emoji) {
+		throw error(404, {message: `could not find emoji for ${date}`})
 	}
+
 	const quotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
 
 	const previousPickDateObject = new Date(pick.created_at)

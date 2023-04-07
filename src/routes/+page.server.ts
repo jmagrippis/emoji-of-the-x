@@ -1,4 +1,4 @@
-import {fail, type Actions} from '@sveltejs/kit'
+import {fail, error, type Actions} from '@sveltejs/kit'
 
 import type {PageServerLoad} from './$types'
 import {isValidTheme} from '../hooks.server'
@@ -35,12 +35,12 @@ export const load = (async ({locals}) => {
 		.single()
 
 	if (pickResult.error) {
-		return fail(500, {error: pickResult.error.message})
+		throw pickResult.error
 	}
 	const pick = pickResult.data
 	const emoji = Array.isArray(pick.emojis) ? pick.emojis[0] : pick.emojis
-	if (!emoji) {
-		return fail(500, {error: 'could not find emoji for current date'})
+	if (!pick || !emoji) {
+		throw error(404, {message: 'could not find an emoji for today!'})
 	}
 	const quotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
 
