@@ -1,4 +1,4 @@
-import {fail, type Actions} from '@sveltejs/kit'
+import {fail, error, type Actions} from '@sveltejs/kit'
 
 import type {PageServerLoad} from './$types'
 import {isValidTheme} from '../hooks.server'
@@ -8,7 +8,7 @@ import {getRelativeAnchor} from '$lib/getRelativeAnchor'
 
 const TEN_YEARS_IN_SECONDS = 10 * 365 * 24 * 60 * 60
 
-export const load = (async ({locals}) => {
+export const load = (async ({locals, url}) => {
 	const pickResult = await locals.supabase
 		.from('picks')
 		.select(
@@ -35,16 +35,16 @@ export const load = (async ({locals}) => {
 		.single()
 
 	if (pickResult.error) {
-		return fail(500, {error: pickResult.error.message})
+		throw pickResult.error
 	}
 	const pick = pickResult.data
 	const emoji = Array.isArray(pick.emojis) ? pick.emojis[0] : pick.emojis
-	if (!emoji) {
-		return fail(500, {error: 'could not find emoji for current date'})
+	if (!pick || !emoji) {
+		throw error(404, {message: 'could not find an emoji for today!'})
 	}
-	const quotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
+	const dbQuotes = emoji.quotes ? (Array.isArray(emoji.quotes) ? emoji.quotes : [emoji.quotes]) : []
 
-	const quotedCharacterIds = quotes.reduce<Record<string, string>>((acc, {characters}) => {
+	const quotedCharacterIds = dbQuotes.reduce<Record<string, string>>((acc, {characters}) => {
 		if (!characters) return acc
 		if (Array.isArray(characters)) {
 			characters.forEach(({id}) => {
@@ -65,15 +65,31 @@ export const load = (async ({locals}) => {
 	previousPickDateObject.setDate(previousPickDateObject.getDate() - 1)
 	const previousPick = getRelativeAnchor(previousPickDateObject)
 
+	const quotes = dbQuotes.map(({characters, ...quote}) => ({
+		...quote,
+		character: Array.isArray(characters) ? characters[0] : characters,
+	}))
+
+	const imageUrlTitle = `The emoji of the day is ‘${emoji.name}’!`
+	const ogImageUrlObject = new URL(`${url.origin}/api/og`)
+	ogImageUrlObject.searchParams.set('emoji', emoji.character)
+	ogImageUrlObject.searchParams.set('copy', imageUrlTitle)
+
 	return {
 		emoji,
-		quotes:
-			quotes.map(({characters, ...quote}) => ({
-				...quote,
-				character: Array.isArray(characters) ? characters[0] : characters,
-			})) ?? [],
+		quotes,
 		remainingCharacters: charactersResult.data,
 		previousPick,
+		meta: {
+			title: `${emoji.character} is the emoji of today!`,
+			description: `The official emoji of the day is ${emoji.character}! And we asked ${
+				quotes[0].character?.name ?? 'famous fictional characters'
+			} for a quote... Read on to find out ${emoji.character}`,
+			image: {
+				url: ogImageUrlObject.href,
+				alt: imageUrlTitle,
+			},
+		},
 	}
 }) satisfies PageServerLoad
 

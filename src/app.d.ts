@@ -14,7 +14,14 @@ declare global {
 		}
 		interface PageData {
 			theme: Theme
-			defaultMeta: Record<string, string | Record<string, string>>
+			defaultMeta: {
+				title: string
+				description: string
+				image: {
+					url: string
+					alt: string
+				}
+			}
 		}
 		// interface Platform {}
 	}
