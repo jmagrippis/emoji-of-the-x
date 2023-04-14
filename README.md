@@ -21,6 +21,8 @@ Johnny often livestreams development over at [YouTube](https://www.youtube.com/@
 - [🔴 LIVESTREAM: Setting up ChatGPT 3.5 Turbo 🤖 Generative AI with OpenAI & Supabase](https://www.youtube.com/watch?v=9-U5SByu9e4)
 - [🔴 LIVESTREAM: Cached ChatGPT in response to user interactions 👩‍💻 with SvelteKit Forms & Supabase](https://www.youtube.com/watch?v=-hmYEcUaKUw)
 - [🔴 LIVESTREAM: DALL·E 2 with SvelteKit 🎨 Generative AI art!](https://www.youtube.com/watch?v=hDh670mxZGM)
+- [🔴 LIVESTREAM: Dynamic Open Graph Image Generation 📷](https://www.youtube.com/watch?v=b3vzl9fHvkQ)
+- [🔴 LIVESTREAM: Discord apps & bots with SvelteKit 🤖](https://www.youtube.com/watch?v=hxTpglNE3EY)
 
 ## Running locally
 
