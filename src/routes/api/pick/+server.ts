@@ -1,7 +1,7 @@
 import {error, json} from '@sveltejs/kit'
 
 import type {RequestHandler} from './$types'
-import {CRON_API_KEY} from '$env/static/private'
+import {INTERNAL_API_KEY} from '$env/static/private'
 import {supabaseServiceClient} from '$lib/server/supabaseServiceClient'
 import {createChatCompletion} from '$lib/server/openaiClient'
 import {getIsoDate} from '$lib/getIsoDate'
@@ -9,8 +9,8 @@ import {getIsoDate} from '$lib/getIsoDate'
 export const GET: RequestHandler = async ({url}) => {
 	const apiKey = url.searchParams.get('apiKey')
 
-	if (apiKey !== CRON_API_KEY) {
-		throw error(400, 'Invalid API key')
+	if (apiKey !== INTERNAL_API_KEY) {
+		return new Response('Invalid API key', {status: 400})
 	}
 
 	const isoDate = getIsoDate(new Date())
